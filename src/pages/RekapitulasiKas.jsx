@@ -835,12 +835,10 @@ export default function RekapitulasiKas() {
     <div className="w-full max-w-7xl mx-auto p-6">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-2">
+        <h1 className="text-4xl font-bold text-slate-900 mb-2">
           UANG KAS GENBI UNSIKA
         </h1>
-        <p className="text-lg text-slate-600 dark:text-slate-400">
-          Periode 2024-2025
-        </p>
+        <p className="text-lg text-slate-600">Periode 2024-2025</p>
       </div>
 
       {/* Search Bar */}
@@ -851,21 +849,21 @@ export default function RekapitulasiKas() {
           placeholder="Cari berdasarkan nama atau jabatan..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10 h-11 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md w-full"
+          className="pl-10 h-11 bg-white border border-slate-200 rounded-md w-full"
         />
       </div>
 
       {/* Table Container */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 overflow-hidden">
+      <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-700">
+          <table className="min-w-full divide-y divide-slate-200">
             <thead>
-              <tr className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-slate-700 dark:to-slate-600 border-b-2 border-slate-200 dark:border-slate-600">
+              <tr className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b-2 border-slate-200">
                 <th className="w-12 text-center font-bold text-slate-900 dark:text-white py-3">
                   No
                 </th>
                 <th
-                  className="font-bold text-slate-900 dark:text-white cursor-pointer hover:bg-blue-100 dark:hover:bg-slate-600 px-4 py-3 text-left"
+                  className="font-bold text-slate-900 cursor-pointer hover:bg-blue-100 px-4 py-3 text-left"
                   onClick={() => handleSort("nama")}
                 >
                   <div className="flex items-center gap-2">
@@ -873,37 +871,35 @@ export default function RekapitulasiKas() {
                     <ArrowUpDown className="w-4 h-4" />
                   </div>
                 </th>
-                <th className="font-bold text-slate-900 dark:text-white py-3">
-                  Jabatan
-                </th>
-                <th className="text-center font-bold text-slate-900 dark:text-white text-sm py-3">
+                <th className="font-bold text-slate-900 py-3">Jabatan</th>
+                <th className="text-center font-bold text-slate-900 text-sm py-3">
                   Okt
                 </th>
-                <th className="text-center font-bold text-slate-900 dark:text-white text-sm py-3">
+                <th className="text-center font-bold text-slate-900 text-sm py-3">
                   Nov
                 </th>
-                <th className="text-center font-bold text-slate-900 dark:text-white text-sm py-3">
+                <th className="text-center font-bold text-slate-900 text-sm py-3">
                   Des
                 </th>
-                <th className="text-center font-bold text-slate-900 dark:text-white text-sm py-3">
+                <th className="text-center font-bold text-slate-900 text-sm py-3">
                   Jan
                 </th>
-                <th className="text-center font-bold text-slate-900 dark:text-white text-sm py-3">
+                <th className="text-center font-bold text-slate-900 text-sm py-3">
                   Feb
                 </th>
-                <th className="text-center font-bold text-slate-900 dark:text-white text-sm py-3">
+                <th className="text-center font-bold text-slate-900 text-sm py-3">
                   Mar
                 </th>
-                <th className="text-center font-bold text-slate-900 dark:text-white text-sm py-3">
+                <th className="text-center font-bold text-slate-900 text-sm py-3">
                   Apr
                 </th>
-                <th className="text-center font-bold text-slate-900 dark:text-white text-sm py-3">
+                <th className="text-center font-bold text-slate-900 text-sm py-3">
                   Mei
                 </th>
-                <th className="text-center font-bold text-slate-900 dark:text-white text-sm py-3">
+                <th className="text-center font-bold text-slate-900 text-sm py-3">
                   Jun
                 </th>
-                <th className="text-right font-bold text-slate-900 dark:text-white text-sm py-3">
+                <th className="text-right font-bold text-slate-900 text-sm py-3">
                   Total
                 </th>
               </tr>
@@ -912,86 +908,84 @@ export default function RekapitulasiKas() {
               {sortedData.map((row) => (
                 <tr
                   key={row.id}
-                  className="border-b border-slate-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700/50 transition-colors"
+                  className="border-b border-slate-200 hover:bg-blue-50 transition-colors"
                 >
-                  <td className="text-center text-sm font-medium text-slate-600 dark:text-slate-400 py-2">
+                  <td className="text-center text-sm font-medium text-slate-600 py-2">
                     {row.no}
                   </td>
-                  <td className="font-medium text-slate-900 dark:text-white py-2">
+                  <td className="font-medium text-slate-900 py-2">
                     {row.nama}
                   </td>
-                  <td className="text-sm text-slate-600 dark:text-slate-400 py-2">
-                    {row.jabatan}
-                  </td>
-                  <td className="text-right text-sm text-slate-700 dark:text-slate-300 py-2">
+                  <td className="text-sm text-slate-600 py-2">{row.jabatan}</td>
+                  <td className="text-right text-sm text-slate-700 py-2">
                     {formatCurrency(row.oktober)}
                   </td>
-                  <td className="text-right text-sm text-slate-700 dark:text-slate-300 py-2">
+                  <td className="text-right text-sm text-slate-700 py-2">
                     {formatCurrency(row.november)}
                   </td>
-                  <td className="text-right text-sm text-slate-700 dark:text-slate-300 py-2">
+                  <td className="text-right text-sm text-slate-700 py-2">
                     {formatCurrency(row.desember)}
                   </td>
-                  <td className="text-right text-sm text-slate-700 dark:text-slate-300 py-2">
+                  <td className="text-right text-sm text-slate-700 py-2">
                     {formatCurrency(row.januari)}
                   </td>
-                  <td className="text-right text-sm text-slate-700 dark:text-slate-300 py-2">
+                  <td className="text-right text-sm text-slate-700 py-2">
                     {formatCurrency(row.februari)}
                   </td>
-                  <td className="text-right text-sm text-slate-700 dark:text-slate-300 py-2">
+                  <td className="text-right text-sm text-slate-700 py-2">
                     {formatCurrency(row.maret)}
                   </td>
-                  <td className="text-right text-sm text-slate-700 dark:text-slate-300 py-2">
+                  <td className="text-right text-sm text-slate-700 py-2">
                     {formatCurrency(row.april)}
                   </td>
-                  <td className="text-right text-sm text-slate-700 dark:text-slate-300 py-2">
+                  <td className="text-right text-sm text-slate-700 py-2">
                     {formatCurrency(row.mei)}
                   </td>
-                  <td className="text-right text-sm text-slate-700 dark:text-slate-300 py-2">
+                  <td className="text-right text-sm text-slate-700 py-2">
                     {formatCurrency(row.juni)}
                   </td>
-                  <td className="text-right font-semibold text-slate-900 dark:text-white bg-blue-50 dark:bg-slate-700 py-2">
+                  <td className="text-right font-semibold text-slate-900 bg-blue-50 py-2">
                     {formatCurrency(calculateTotal(row))}
                   </td>
                 </tr>
               ))}
 
               {/* Total Row */}
-              <tr className="bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-slate-600 dark:to-slate-500 font-bold border-t-2 border-slate-300 dark:border-slate-600">
+              <tr className="bg-gradient-to-r from-blue-100 to-indigo-100 font-bold border-t-2 border-slate-300">
                 <td
                   colSpan={3}
-                  className="text-sm text-slate-900 dark:text-white font-bold py-2"
+                  className="text-sm text-slate-900 font-bold py-2"
                 >
                   JUMLAH TOTAL
                 </td>
-                <td className="text-right text-sm text-slate-900 dark:text-white py-2">
+                <td className="text-right text-sm text-slate-900 py-2">
                   {formatCurrency(monthlyTotals.oktober)}
                 </td>
-                <td className="text-right text-sm text-slate-900 dark:text-white py-2">
+                <td className="text-right text-sm text-slate-900 py-2">
                   {formatCurrency(monthlyTotals.november)}
                 </td>
-                <td className="text-right text-sm text-slate-900 dark:text-white py-2">
+                <td className="text-right text-sm text-slate-900 py-2">
                   {formatCurrency(monthlyTotals.desember)}
                 </td>
-                <td className="text-right text-sm text-slate-900 dark:text-white py-2">
+                <td className="text-right text-sm text-slate-900 py-2">
                   {formatCurrency(monthlyTotals.januari)}
                 </td>
-                <td className="text-right text-sm text-slate-900 dark:text-white py-2">
+                <td className="text-right text-sm text-slate-900 py-2">
                   {formatCurrency(monthlyTotals.februari)}
                 </td>
-                <td className="text-right text-sm text-slate-900 dark:text-white py-2">
+                <td className="text-right text-sm text-slate-900 py-2">
                   {formatCurrency(monthlyTotals.maret)}
                 </td>
-                <td className="text-right text-sm text-slate-900 dark:text-white py-2">
+                <td className="text-right text-sm text-slate-900 py-2">
                   {formatCurrency(monthlyTotals.april)}
                 </td>
-                <td className="text-right text-sm text-slate-900 dark:text-white py-2">
+                <td className="text-right text-sm text-slate-900 py-2">
                   {formatCurrency(monthlyTotals.mei)}
                 </td>
-                <td className="text-right text-sm text-slate-900 dark:text-white py-2">
+                <td className="text-right text-sm text-slate-900 py-2">
                   {formatCurrency(monthlyTotals.juni)}
                 </td>
-                <td className="text-right text-lg text-slate-900 dark:text-white font-bold py-2">
+                <td className="text-right text-lg text-slate-900 font-bold py-2">
                   {formatCurrency(grandTotal)}
                 </td>
               </tr>
