@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Home, CalendarDays, Trophy, UserRound, Menu, LogOut, X } from 'lucide-react';
+import { Home, CalendarDays, Trophy, UserRound, Menu, LogOut, X, Wallet } from 'lucide-react';
 import Avatar from './Avatar.jsx';
 import { logout } from '../utils/auth.js';
 
