@@ -187,3 +187,19 @@ h4 {
 
 /* Utility */
 .text-balance{ text-wrap: balance; }
+
+/* ==================== Mobile Drawer / Hamburger ==================== */
+.drawer-slide-in{ transform: translateX(-6px) scale(0.995); opacity: 0; }
+.drawer-open .drawer-slide-in{ transform: translateX(0) scale(1); opacity: 1; }
+
+@media (max-width: 767px){
+  .drawer-slide-in{ transform: translateX(-12px) translateY(0) scale(.98); opacity:0; animation: drawerIn .18s forwards ease-out; }
+}
+
+@keyframes drawerIn{
+  from{ transform: translateX(-18px) scale(.98); opacity: 0; }
+  to{ transform: translateX(0) scale(1); opacity: 1; }
+}
+
+/* make images responsive by default */
+img{ max-width:100%; height:auto; }

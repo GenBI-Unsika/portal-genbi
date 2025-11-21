@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, ChevronLeft, ChevronRight, CalendarDays, LayoutGrid, LogOut, Search, ChevronDown, User2, Trophy } from 'lucide-react';
+import { Menu, ChevronLeft, ChevronRight, CalendarDays, LayoutGrid, LogOut, Search, ChevronDown, User2, Trophy, X } from 'lucide-react';
 import ToastProvider from '../components/Toasts';
 import { useAuth } from '../modules/auth/AuthContext';
 
@@ -17,6 +17,7 @@ export default function AppLayout() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(() => JSON.parse(localStorage.getItem('sb-col') || 'false'));
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => localStorage.setItem('sb-col', JSON.stringify(collapsed)), [collapsed]);
@@ -30,67 +31,121 @@ export default function AppLayout() {
           <p className="text-base font-semibold text-neutral-900">GenBI Unsika</p>
         </div>
       ) : null,
-    [collapsed]
-  );
+          {/* Mobile floating drawer (hamburger) */}
+          {mobileOpen && (
+            <div className="fixed inset-0 z-40 md:hidden">
+              <div className="modal-backdrop" onClick={() => setMobileOpen(false)} />
+              <div className="pointer-events-none fixed inset-0 flex items-start">
+                <aside className="pointer-events-auto mt-16 ml-4 w-72 max-w-[80%] transform rounded-xl border border-neutral-200 bg-white p-2 shadow-lg transition-all duration-200 ease-out drawer-slide-in">
+                  <div className="flex items-center justify-between px-2 py-2">
+                    <div className="flex items-center gap-3">
+                      <img src="/favicon-genbi.webp" alt="GenBI Unsika" className="h-8 w-8 p-1 rounded-lg border border-neutral-200 object-cover" />
+                      <p className="text-base font-semibold text-neutral-900">GenBI Unsika</p>
+                    </div>
+                    <button onClick={() => setMobileOpen(false)} className="inline-grid h-9 w-9 place-items-center rounded-lg border border-neutral-200 focus-ring">
+                      <X className="h-5 w-5 text-neutral-700" />
+                    </button>
+                  </div>
 
-  return (
-    <ToastProvider>
-      <div className="min-h-screen bg-neutral-50 text-neutral-800">
-        <div className="flex">
-          {/* Sidebar */}
-          <aside className={`sticky top-0 flex h-screen flex-col border-r border-neutral-200 bg-white transition-[width] duration-200 ${collapsed ? 'w-[84px]' : 'w-[260px]'} shadow-soft-sm`}>
-            <div className="flex items-center justify-between border-b border-neutral-200">
-              {Brand}
-              <button
-                className="mr-2 inline-grid h-8 w-8 place-items-center rounded-lg border border-neutral-200 hover:bg-neutral-50 active:scale-[0.98] transition focus-ring"
-                onClick={() => setCollapsed((s) => !s)}
-                aria-label="Toggle sidebar"
-              >
-                {collapsed ? <ChevronRight className="h-4 w-4 text-neutral-700" /> : <ChevronLeft className="h-4 w-4 text-neutral-700" />}
-              </button>
+                  <nav className="mt-2 px-1 py-1">
+                    <ul className="space-y-1">
+                      {nav.map(({ to, label, icon: Icon }) => {
+                        const active = loc.pathname === to || loc.pathname.startsWith(to + '/');
+                        return (
+                          <li key={to}>
+                            <NavLink
+                              to={to}
+                              onClick={() => setMobileOpen(false)}
+                              className={`group flex w-full items-center rounded-lg border border-transparent py-2.5 text-sm transition gap-3 px-3 ${
+                                active ? 'bg-primary-50 text-primary-700 border-primary-200' : 'hover:bg-neutral-50'
+                              }`}
+                            >
+                              <Icon className={`h-5 w-5 ${active ? 'text-primary-600' : 'text-neutral-600'}`} />
+                              <span className={active ? 'text-primary-700' : 'text-neutral-700'}>{label}</span>
+                            </NavLink>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </nav>
+
+                  <div className="mt-3 px-2 pb-2">
+                    <button
+                      onClick={() => {
+                        logout();
+                        setMobileOpen(false);
+                        navigate('/login', { replace: true });
+                      }}
+                      className="flex w-full items-center justify-center gap-2 rounded-lg bg-neutral-800 hover:bg-neutral-900 border border-neutral-200 px-3 py-2 text-sm font-medium text-white transition focus-ring"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span>Logout</span>
+                    </button>
+                  </div>
+                </aside>
+              </div>
             </div>
-
-            <nav className="flex-1 px-2 py-4">
-              <ul className="space-y-1">
-                {nav.map(({ to, label, icon: Icon }) => {
-                  const active = loc.pathname === to || loc.pathname.startsWith(to + '/');
-
-                  return (
-                    <li key={to}>
-                      <NavLink
-                        to={to}
-                        className={`group flex w-full items-center rounded-xl border border-transparent py-2.5 text-sm transition
-                          ${collapsed ? 'justify-center px-0' : 'gap-3 px-3'}
-                          ${active ? 'bg-primary-50 text-primary-700 border-primary-200' : 'hover:bg-neutral-50'}`}
-                      >
-                        <Icon className={`h-5 w-5 ${active ? 'text-primary-600' : 'text-neutral-600'}`} />
-                        {!collapsed && <span className={active ? 'text-primary-700' : 'text-neutral-700'}>{label}</span>}
-                      </NavLink>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
-
-            <div className="mt-auto px-2 pb-4">
-              <button
-                onClick={() => {
-                  logout();
-                  navigate('/login', { replace: true });
-                }}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-800 hover:bg-neutral-900 border border-neutral-200 px-3 py-2.5 text-sm font-medium text-white transition focus-ring"
-              >
-                <LogOut className="h-4 w-4" />
-                {!collapsed && <span>Logout</span>}
-              </button>
+          )}
             </div>
           </aside>
+
+          {/* Mobile drawer */}
+          {mobileOpen && (
+            <div className="fixed inset-0 z-40 flex md:hidden">
+              <div className="modal-backdrop" onClick={() => setMobileOpen(false)} />
+              <aside className="relative z-50 flex h-full flex-col border-r border-neutral-200 bg-white w-64">
+                <div className="flex items-center justify-between border-b border-neutral-200 px-3 py-3">
+                  <div className="flex items-center gap-3">
+                    <img src="/favicon-genbi.webp" alt="GenBI Unsika" className="h-8 w-8 p-1 rounded-lg border border-neutral-200 object-cover" />
+                    <p className="text-base font-semibold text-neutral-900">GenBI Unsika</p>
+                  </div>
+                  <button onClick={() => setMobileOpen(false)} className="inline-grid h-9 w-9 place-items-center rounded-lg border border-neutral-200 focus-ring">
+                    <X className="h-5 w-5 text-neutral-700" />
+                  </button>
+                </div>
+
+                <nav className="flex-1 px-2 py-4">
+                  <ul className="space-y-1">
+                    {nav.map(({ to, label, icon: Icon }) => {
+                      const active = loc.pathname === to || loc.pathname.startsWith(to + '/');
+                      return (
+                        <li key={to}>
+                          <NavLink
+                            to={to}
+                            onClick={() => setMobileOpen(false)}
+                            className={`group flex w-full items-center rounded-xl border border-transparent py-2.5 text-sm transition gap-3 px-3 ${active ? 'bg-primary-50 text-primary-700 border-primary-200' : 'hover:bg-neutral-50'}`}
+                          >
+                            <Icon className={`h-5 w-5 ${active ? 'text-primary-600' : 'text-neutral-600'}`} />
+                            <span className={active ? 'text-primary-700' : 'text-neutral-700'}>{label}</span>
+                          </NavLink>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </nav>
+
+                <div className="mt-auto px-2 pb-4">
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileOpen(false);
+                      navigate('/login', { replace: true });
+                    }}
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-800 hover:bg-neutral-900 border border-neutral-200 px-3 py-2.5 text-sm font-medium text-white transition focus-ring"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    <span>Logout</span>
+                  </button>
+                </div>
+              </aside>
+            </div>
+          )}
 
           {/* Main */}
           <div className="flex min-h-screen flex-1 flex-col">
             <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/90 backdrop-blur shadow-soft-sm">
               <div className="flex items-center gap-3 px-4 py-3 md:px-6">
-                <button className="inline-grid h-9 w-9 place-items-center rounded-lg border border-neutral-200 hover:bg-neutral-50 md:hidden focus-ring" onClick={() => setCollapsed((s) => !s)} aria-label="Toggle sidebar">
+                <button className="inline-grid h-9 w-9 place-items-center rounded-lg border border-neutral-200 hover:bg-neutral-50 md:hidden focus-ring" onClick={() => setMobileOpen(true)} aria-label="Toggle sidebar">
                   <Menu className="h-5 w-5 text-neutral-700" />
                 </button>
                 <h2 className="text-base font-semibold text-neutral-900">Selamat datang, {user?.email}</h2>
