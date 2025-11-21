@@ -5,11 +5,12 @@ import ToastProvider from '../components/Toasts';
 import { useAuth } from '../modules/auth/AuthContext';
 
 const nav = [
-  { to: '/', label: 'Beranda', icon: LayoutGrid },
-  { to: '/kalender', label: 'Kalender GenBI Unsika', icon: CalendarDays },
-  { to: '/anggota', label: 'Data Anggota', icon: User2 },
-  { to: '/peringkat', label: 'Peringkat', icon: Trophy },
-  { to: '/profile', label: 'Profile', icon: User2 },
+  { to: "/", label: "Beranda", icon: LayoutGrid },
+  { to: "/kalender", label: "Kalender GenBI Unsika", icon: CalendarDays },
+  { to: "/anggota", label: "Data Anggota", icon: User2 },
+  { to: "/rekapitulasi-kas", label: "Rekapitulasi Kas", icon: Wallet },
+  { to: "/peringkat", label: "Peringkat", icon: Trophy },
+  { to: "/profile", label: "Profile", icon: User2 },
 ];
 
 export default function AppLayout() {
@@ -20,15 +21,24 @@ export default function AppLayout() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [open, setOpen] = useState(false);
 
-  useEffect(() => localStorage.setItem('sb-col', JSON.stringify(collapsed)), [collapsed]);
+  useEffect(
+    () => localStorage.setItem("sb-col", JSON.stringify(collapsed)),
+    [collapsed]
+  );
   useEffect(() => setOpen(false), [loc.pathname]);
 
   const Brand = useMemo(
     () =>
       !collapsed ? (
         <div className="flex items-center gap-3 px-3 py-3">
-          <img src="/favicon-genbi.webp" alt="GenBI Unsika" className="h-8 w-8 p-1 rounded-lg border border-neutral-200 object-cover" />
-          <p className="text-base font-semibold text-neutral-900">GenBI Unsika</p>
+          <img
+            src="/favicon-genbi.webp"
+            alt="GenBI Unsika"
+            className="h-8 w-8 p-1 rounded-lg border border-neutral-200 object-cover"
+          />
+          <p className="text-base font-semibold text-neutral-900">
+            GenBI Unsika
+          </p>
         </div>
       ) : null,
           {/* Mobile floating drawer (hamburger) */}
@@ -148,21 +158,31 @@ export default function AppLayout() {
                 <button className="inline-grid h-9 w-9 place-items-center rounded-lg border border-neutral-200 hover:bg-neutral-50 md:hidden focus-ring" onClick={() => setMobileOpen(true)} aria-label="Toggle sidebar">
                   <Menu className="h-5 w-5 text-neutral-700" />
                 </button>
-                <h2 className="text-base font-semibold text-neutral-900">Selamat datang, {user?.email}</h2>
+                <h2 className="text-base font-semibold text-neutral-900">
+                  Selamat datang, {user?.email}
+                </h2>
 
                 <div className="ml-auto w-full max-w-md">
                   <div className="relative">
                     <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-500" />
-                    <input className="h-10 w-full rounded-lg border border-neutral-200 bg-white pl-9 pr-3 text-sm outline-none placeholder:text-neutral-400 focus-ring" placeholder="Telusuri…" />
+                    <input
+                      className="h-10 w-full rounded-lg border border-neutral-200 bg-white pl-9 pr-3 text-sm outline-none placeholder:text-neutral-400 focus-ring"
+                      placeholder="Telusuri…"
+                    />
                   </div>
                 </div>
 
                 <div className="relative ml-2">
-                  <button onClick={() => setOpen((s) => !s)} className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 hover:bg-neutral-50 focus-ring">
+                  <button
+                    onClick={() => setOpen((s) => !s)}
+                    className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-white px-2.5 py-1.5 hover:bg-neutral-50 focus-ring"
+                  >
                     <div className="grid h-8 w-8 place-items-center rounded-full border border-neutral-200 bg-primary-50 text-primary-700">
                       <User2 className="h-4 w-4" />
                     </div>
-                    <span className="hidden text-sm font-medium text-neutral-800 md:block">Profile</span>
+                    <span className="hidden text-sm font-medium text-neutral-800 md:block">
+                      Profile
+                    </span>
                     <ChevronDown className="hidden h-4 w-4 text-neutral-500 md:block" />
                   </button>
                   {open && (
@@ -171,7 +191,7 @@ export default function AppLayout() {
                         className="block w-full px-3 py-2 text-left text-sm hover:bg-neutral-50"
                         onClick={() => {
                           setOpen(false);
-                          navigate('/profile');
+                          navigate("/profile");
                         }}
                       >
                         Lihat Profil
@@ -181,7 +201,7 @@ export default function AppLayout() {
                         className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-secondary-700 hover:bg-neutral-50"
                         onClick={() => {
                           logout();
-                          navigate('/login', { replace: true });
+                          navigate("/login", { replace: true });
                         }}
                       >
                         <LogOut className="h-4 w-4" />

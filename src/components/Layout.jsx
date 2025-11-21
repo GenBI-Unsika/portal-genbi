@@ -8,6 +8,7 @@ const nav = [
   { to: '/', label: 'Beranda', icon: Home },
   { to: '/kalender', label: 'Kalender GenBI Unsika', icon: CalendarDays },
   { to: '/anggota', label: 'Data Anggota', icon: UserRound },
+  { to: '/rekapitulasi-kas', label: 'Rekapitulasi Kas', icon: Wallet },
   { to: '/peringkat', label: 'Peringkat', icon: Trophy },
   { to: '/profile', label: 'Profile', icon: UserRound },
 ];

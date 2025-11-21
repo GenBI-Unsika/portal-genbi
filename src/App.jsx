@@ -1,14 +1,15 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import Layout from './components/Layout.jsx';
-import Login from './pages/Login.jsx';
-import Home from './pages/Home.jsx';
-import Calendar from './pages/Calendar.jsx';
-import Leaderboard from './pages/Leaderboard.jsx';
-import Profile from './pages/Profile.jsx';
-import Anggota from './pages/Anggota.jsx';
-import DivisionDetail from './pages/DivisionDetail.jsx';
-import { isAuthed } from './utils/auth.js';
-import ToastProvider from './components/Toast.jsx';
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import Layout from "./components/Layout.jsx";
+import Login from "./pages/Login.jsx";
+import Home from "./pages/Home.jsx";
+import Calendar from "./pages/Calendar.jsx";
+import Leaderboard from "./pages/Leaderboard.jsx";
+import Profile from "./pages/Profile.jsx";
+import Anggota from "./pages/Anggota.jsx";
+import DivisionDetail from "./pages/DivisionDetail.jsx";
+import RekapitulasiKas from "./pages/RekapitulasiKas.jsx";
+import { isAuthed } from "./utils/auth.js";
+import ToastProvider from "./components/Toast.jsx";
 
 function RequireAuth({ children }) {
   const ok = isAuthed();
@@ -33,6 +34,7 @@ export default function App() {
           <Route path="/kalender" element={<Calendar />} />
           <Route path="/anggota" element={<Anggota />} />
           <Route path="/anggota/:divisionKey" element={<DivisionDetail />} />
+          <Route path="/rekapitulasi-kas" element={<RekapitulasiKas />} />
           <Route path="/peringkat" element={<Leaderboard />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
