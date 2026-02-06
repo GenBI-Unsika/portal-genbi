@@ -3,6 +3,7 @@ import { Outlet, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, ChevronLeft, ChevronRight, CalendarDays, LayoutGrid, LogOut, Search, ChevronDown, User2, Trophy, X, Wallet } from 'lucide-react';
 import ToastProvider from '../components/Toasts';
 import { useAuth } from '../modules/auth/AuthContext';
+import { useConfirm } from '../contexts/ConfirmContext.jsx';
 
 const nav = [
   { to: '/', label: 'Beranda', icon: LayoutGrid },
@@ -17,6 +18,7 @@ export default function AppLayout() {
   const loc = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const { confirm } = useConfirm();
   const [collapsed, setCollapsed] = useState(() => JSON.parse(localStorage.getItem('sb-col') || 'false'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const [open, setOpen] = useState(false);
@@ -32,8 +34,23 @@ export default function AppLayout() {
           <p className="text-base font-semibold text-neutral-900">GenBI Unsika</p>
         </div>
       ) : null,
-    [collapsed]
+    [collapsed],
   );
+
+  const doLogout = async () => {
+    const ok = await confirm({
+      title: 'Logout?',
+      description: 'Anda akan keluar dari akun ini.',
+      confirmText: 'Ya, logout',
+      cancelText: 'Batal',
+      tone: 'danger',
+    });
+
+    if (!ok) return;
+
+    logout();
+    navigate('/login', { replace: true });
+  };
 
   return (
     <ToastProvider>
@@ -75,13 +92,7 @@ export default function AppLayout() {
             </nav>
 
             <div className="mt-auto px-2 pb-4">
-              <button
-                onClick={() => {
-                  logout();
-                  navigate('/login', { replace: true });
-                }}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-800 hover:bg-neutral-900 border border-neutral-200 px-3 py-2.5 text-sm font-medium text-white transition focus-ring"
-              >
+              <button onClick={doLogout} className="flex w-full items-center justify-center gap-2 rounded-xl bg-neutral-800 hover:bg-neutral-900 border border-neutral-200 px-3 py-2.5 text-sm font-medium text-white transition focus-ring">
                 <LogOut className="h-4 w-4" />
                 {!collapsed && <span>Logout</span>}
               </button>
@@ -126,10 +137,9 @@ export default function AppLayout() {
 
                   <div className="mt-3 px-2 pb-2">
                     <button
-                      onClick={() => {
-                        logout();
+                      onClick={async () => {
+                        await doLogout();
                         setMobileOpen(false);
-                        navigate('/login', { replace: true });
                       }}
                       className="flex w-full items-center justify-center gap-2 rounded-lg bg-neutral-800 hover:bg-neutral-900 border border-neutral-200 px-3 py-2 text-sm font-medium text-white transition focus-ring"
                     >
@@ -144,7 +154,7 @@ export default function AppLayout() {
 
           {/* Main */}
           <div className="flex min-h-screen flex-1 flex-col">
-            <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white/90 backdrop-blur shadow-soft-sm">
+            <header className="sticky top-0 z-30 border-b border-neutral-200 bg-white shadow-soft-sm isolate">
               <div className="flex items-center gap-3 px-4 py-3 md:px-6">
                 <button className="inline-grid h-9 w-9 place-items-center rounded-lg border border-neutral-200 hover:bg-neutral-50 md:hidden focus-ring" onClick={() => setMobileOpen(true)} aria-label="Toggle sidebar">
                   <Menu className="h-5 w-5 text-neutral-700" />
@@ -178,13 +188,7 @@ export default function AppLayout() {
                         Lihat Profil
                       </button>
                       <div className="my-1 h-px bg-neutral-200" />
-                      <button
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-secondary-700 hover:bg-neutral-50"
-                        onClick={() => {
-                          logout();
-                          navigate('/login', { replace: true });
-                        }}
-                      >
+                      <button className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-secondary-700 hover:bg-neutral-50" onClick={doLogout}>
                         <LogOut className="h-4 w-4" />
                         Keluar
                       </button>
@@ -194,7 +198,7 @@ export default function AppLayout() {
               </div>
             </header>
 
-            <main className="flex-1 p-4 md:p-6">
+            <main className="flex-1 p-3 sm:p-4 md:p-6">
               <Outlet />
             </main>
           </div>
