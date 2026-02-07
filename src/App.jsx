@@ -13,7 +13,6 @@ const Calendar = React.lazy(() => import('./pages/Calendar.jsx'));
 const Leaderboard = React.lazy(() => import('./pages/Leaderboard.jsx'));
 const Profile = React.lazy(() => import('./pages/Profile.jsx'));
 const Anggota = React.lazy(() => import('./pages/Anggota.jsx'));
-const ManageAnggota = React.lazy(() => import('./pages/ManageAnggota.jsx'));
 const DivisionDetail = React.lazy(() => import('./pages/DivisionDetail.jsx'));
 const RekapitulasiKas = React.lazy(() => import('./pages/RekapitulasiKas.jsx'));
 const Dispensasi = React.lazy(() => import('./pages/Dispensasi.jsx'));
@@ -65,7 +64,6 @@ export default function App() {
               <Route index element={<Home />} />
               <Route path="/kalender" element={<Calendar />} />
               <Route path="/anggota" element={<Anggota />} />
-              <Route path="/anggota/manage" element={<ManageAnggota />} />
               <Route path="/anggota/:divisionKey" element={<DivisionDetail />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/rekapitulasi-kas" element={<RekapitulasiKas />} />
