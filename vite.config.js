@@ -4,12 +4,20 @@ import tailwind from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [react(), tailwind()],
+  test: {
+    environment: 'jsdom',
+    setupFiles: ['./src/test/setup.js'],
+    css: true,
+    restoreMocks: true,
+    clearMocks: true,
+  },
   server: {
     port: 5175,
     strictPort: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        // Use IPv4 loopback explicitly to avoid occasional IPv6/localhost resolution issues on Windows.
+        target: process.env.VITE_API_PROXY_TARGET || 'http://127.0.0.1:4000',
         changeOrigin: true,
       },
     },
