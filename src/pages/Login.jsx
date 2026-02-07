@@ -9,6 +9,18 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react';
 // Keys for localStorage form persistence (NOT for auth data)
 const FORM_STORAGE_KEY = 'portal_login_form_draft';
 
+function defaultPasswordFromEmail(email) {
+  const raw = String(email || '')
+    .trim()
+    .toLowerCase();
+  const at = raw.indexOf('@');
+  if (at <= 0) return '';
+  const local = raw.slice(0, at);
+  const domain = raw.slice(at + 1);
+  const isStudent = domain === 'student.unsika.ac.id' && /^\d{8,}$/.test(local);
+  return isStudent ? local : '';
+}
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,6 +53,12 @@ export default function Login() {
       localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify({ email, rememberMe }));
     }
   }, [email, rememberMe]);
+
+  useEffect(() => {
+    if (password) return;
+    const candidate = defaultPasswordFromEmail(email);
+    if (candidate) setPassword(candidate);
+  }, [email, password]);
 
   const clearFormDraft = () => {
     localStorage.removeItem(FORM_STORAGE_KEY);
