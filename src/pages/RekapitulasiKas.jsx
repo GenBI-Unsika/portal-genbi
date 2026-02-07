@@ -1,14 +1,12 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useOutletContext } from 'react-router-dom';
-import { ArrowUpDown, Search, ChevronDown, ChevronUp, Edit2, Trash2, Users, TrendingUp, Wallet, RefreshCw, X, Save, Loader2 } from 'lucide-react';
-import { fetchTreasuryRecap, updateTreasuryMember } from '../utils/api.js';
+import { ArrowUpDown, Search, ChevronDown, ChevronUp, Users, TrendingUp, Wallet, RefreshCw, X } from 'lucide-react';
+import { fetchTreasuryRecap } from '../utils/api.js';
 import { useToast } from '../components/Toast.jsx';
 import LoadingState from '../components/ui/LoadingState.jsx';
 import ErrorState from '../components/ui/ErrorState.jsx';
 import EmptyState from '../components/EmptyState.jsx';
-import Modal from '../components/Modal.jsx';
 
 const months = [
   { key: 'oktober', label: 'Okt', full: 'Oktober' },
@@ -22,24 +20,8 @@ const months = [
   { key: 'juni', label: 'Jun', full: 'Juni' },
 ];
 
-const initialFormState = {
-  nama: '',
-  jabatan: '',
-  oktober: 0,
-  november: 0,
-  desember: 0,
-  januari: 0,
-  februari: 0,
-  maret: 0,
-  april: 0,
-  mei: 0,
-  juni: 0,
-};
-
 export default function RekapitulasiKas() {
   const toast = useToast();
-  const context = useOutletContext();
-  const isAdmin = context?.isAdmin || false;
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -49,12 +31,6 @@ export default function RekapitulasiKas() {
   const [sortOrder, setSortOrder] = useState('asc');
   const [isMobile, setIsMobile] = useState(false);
   const [expandedRow, setExpandedRow] = useState(null);
-
-  // Admin modal states
-  const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState('edit');
-  const [formData, setFormData] = useState(initialFormState);
-  const [saving, setSaving] = useState(false);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -144,51 +120,6 @@ export default function RekapitulasiKas() {
     return 'Rp' + value.toString();
   };
 
-  // Admin handlers - only edit is supported, members are managed in ManageAnggota
-  const openEditModal = (row) => {
-    setFormData({ ...row });
-    setModalMode('edit');
-    setShowModal(true);
-  };
-
-  const closeModal = () => {
-    setShowModal(false);
-    setFormData(initialFormState);
-  };
-
-  const handleFormChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: field === 'nama' || field === 'jabatan' ? value : Number(value) || 0,
-    }));
-  };
-
-  const handleSave = async () => {
-    if (!formData.id) {
-      toast.push('Pilih anggota untuk mengedit data kas', 'warning');
-      return;
-    }
-
-    setSaving(true);
-    try {
-      // Update all month data for this member
-      const monthsData = {};
-      months.forEach((m) => {
-        monthsData[m.key] = formData[m.key] || 0;
-      });
-
-      const updated = await updateTreasuryMember(formData.id, monthsData);
-      setData((prev) => prev.map((r) => (r.id === updated.id ? { ...r, ...updated } : r)));
-      toast.push('Data kas berhasil diperbarui', 'success');
-      closeModal();
-    } catch (err) {
-      console.error('Save error:', err);
-      toast.push('Gagal memperbarui data kas', 'error');
-    } finally {
-      setSaving(false);
-    }
-  };
-
   // Mobile Card Component
   const MobileCard = ({ row, index }) => {
     const isExpanded = expandedRow === row.id;
@@ -237,18 +168,6 @@ export default function RekapitulasiKas() {
                 </div>
               ))}
             </div>
-
-            {isAdmin && (
-              <div className="flex gap-2 mt-3 pt-3 border-t border-slate-100">
-                <button
-                  onClick={() => openEditModal(row)}
-                  className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2.5 bg-primary-50 hover:bg-primary-100 text-primary-700 rounded-lg text-xs font-medium transition-all active:scale-95"
-                >
-                  <Edit2 className="w-3.5 h-3.5" />
-                  Edit Kas
-                </button>
-              </div>
-            )}
           </div>
         )}
       </div>
@@ -276,16 +195,6 @@ export default function RekapitulasiKas() {
             <span className="hidden sm:inline ml-2">Refresh</span>
           </button>
         </div>
-
-        {isAdmin && (
-          <p className="text-xs text-slate-500 italic">
-            💡 Klik tombol "Edit" pada baris anggota untuk mengubah data kas. Untuk menambah anggota baru, kelola melalui halaman{' '}
-            <a href="/anggota/manage" className="text-primary-600 hover:underline">
-              Kelola Anggota
-            </a>
-            .
-          </p>
-        )}
       </div>
 
       {/* Stats Cards */}
@@ -342,12 +251,7 @@ export default function RekapitulasiKas() {
       </div>
 
       {data.length === 0 ? (
-        <EmptyState
-          icon="clipboard"
-          title="Belum ada data rekapitulasi kas"
-          description={isAdmin ? "Klik tombol 'Tambah Data' untuk menambahkan data kas baru." : 'Data rekapitulasi kas akan muncul di sini setelah ditambahkan oleh admin.'}
-          variant="warning"
-        />
+        <EmptyState icon="clipboard" title="Belum ada data rekapitulasi kas" description="Data rekapitulasi kas akan muncul di sini setelah ditambahkan oleh admin." variant="warning" />
       ) : (
         <>
           {/* Mobile View */}
@@ -388,7 +292,6 @@ export default function RekapitulasiKas() {
                         </th>
                       ))}
                       <th className="text-right font-semibold text-slate-600 py-4 px-4 min-w-[130px]">Total</th>
-                      {isAdmin && <th className="text-center font-semibold text-slate-600 py-4 px-3 min-w-[100px]">Aksi</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -403,18 +306,6 @@ export default function RekapitulasiKas() {
                           </td>
                         ))}
                         <td className="text-right font-bold text-slate-900 bg-gradient-to-r from-transparent to-blue-50 py-4 px-4">{formatCurrency(calculateTotal(row))}</td>
-                        {isAdmin && (
-                          <td className="text-center py-4 px-3">
-                            <div className="flex items-center justify-center gap-1.5">
-                              <button onClick={() => openEditModal(row)} className="p-1.5 hover:bg-primary-100 text-primary-600 rounded-lg transition-colors" title="Edit">
-                                <Edit2 className="w-4 h-4" />
-                              </button>
-                              <button onClick={() => setDeleteConfirm(row.id)} className="p-1.5 hover:bg-red-100 text-red-600 rounded-lg transition-colors" title="Hapus">
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </div>
-                          </td>
-                        )}
                       </tr>
                     ))}
 
@@ -429,7 +320,6 @@ export default function RekapitulasiKas() {
                         </td>
                       ))}
                       <td className="text-right font-bold text-primary-700 py-4 px-4">{formatCurrency(grandTotal)}</td>
-                      {isAdmin && <td></td>}
                     </tr>
                   </tbody>
                 </table>
@@ -437,81 +327,6 @@ export default function RekapitulasiKas() {
             </div>
           )}
         </>
-      )}
-
-      {/* Edit Modal */}
-      {showModal && (
-        <Modal onClose={closeModal}>
-          <div className="bg-white rounded-2xl shadow-soft-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-              <h2 className="text-xl font-bold text-slate-900">Edit Data Kas</h2>
-              <button onClick={closeModal} className="p-2 hover:bg-slate-100 rounded-xl transition-colors">
-                <X className="w-5 h-5 text-slate-500" />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-5">
-              {/* Member info - readonly */}
-              <div className="bg-slate-50 rounded-xl p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center">
-                    <span className="text-white text-sm font-bold">
-                      {(formData.nama || 'XX')
-                        .split(' ')
-                        .slice(0, 2)
-                        .map((w) => w[0]?.toUpperCase())
-                        .join('')}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-slate-900">{formData.nama}</p>
-                    <p className="text-sm text-slate-500">{formData.jabatan || 'Anggota'}</p>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-3">Pembayaran Kas per Bulan</label>
-                <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
-                  {months.map((month) => (
-                    <div key={month.key}>
-                      <label className="block text-xs text-slate-500 mb-1.5">{month.full}</label>
-                      <input type="number" value={formData[month.key] || 0} onChange={(e) => handleFormChange(month.key, e.target.value)} className="input text-center text-sm" min="0" step="1000" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-4 border-t border-slate-200">
-                <div className="text-sm text-slate-500">
-                  Total: <span className="font-bold text-slate-900">{formatCurrency(calculateTotal(formData))}</span>
-                </div>
-                <div className="flex gap-3">
-                  <button onClick={closeModal} className="px-5 py-2.5 border border-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-50 transition-colors" disabled={saving}>
-                    Batal
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    disabled={saving}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white rounded-xl font-semibold disabled:opacity-50 transition-all"
-                  >
-                    {saving ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Menyimpan...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="w-4 h-4" />
-                        Simpan
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </Modal>
       )}
     </div>
   );

@@ -7,7 +7,7 @@ import ErrorState from '../components/ui/ErrorState';
 import EmptyState from '../components/EmptyState';
 import { useApi } from '../hooks/useApi';
 import { fetchTeamMembers, fetchDivisions } from '../utils/api';
-import { Users, Search, ChevronRight, Briefcase, GraduationCap, Building2, Calendar, Quote, BookOpen, ArrowRight, Sparkles, Settings } from 'lucide-react';
+import { Users, Search, ChevronRight, Briefcase, GraduationCap, Building2, Calendar, Quote, BookOpen, ArrowRight, Sparkles } from 'lucide-react';
 
 // Default division metadata for fallback
 const defaultMeta = {
@@ -156,12 +156,6 @@ export default function Anggota() {
             <p className="text-sm sm:text-base text-neutral-600 mt-1">Kenali keluarga besar GenBI UNSIKA</p>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
-            {isAdmin && (
-              <button onClick={() => navigate('/anggota/manage')} className="flex items-center gap-2 px-3 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-xl text-sm font-medium transition-all">
-                <Settings className="w-4 h-4" />
-                <span className="hidden sm:inline">Kelola</span>
-              </button>
-            )}
             <div className="flex items-center gap-2 px-3 py-2 bg-primary-50 border border-primary-200 rounded-xl">
               <Users className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600" />
               <span className="text-sm sm:text-base font-semibold text-primary-700">{totalMembers} Anggota</span>
