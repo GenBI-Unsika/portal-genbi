@@ -6,7 +6,7 @@ import { logout, getMe, syncMe } from '../utils/auth.js';
 import { useConfirm } from '../contexts/ConfirmContext.jsx';
 import { useToast } from './Toast.jsx';
 
-// Role labels mapping
+
 const ROLE_LABELS = {
   admin: 'Administrator',
   ketua: 'Ketua',
@@ -18,10 +18,9 @@ const ROLE_LABELS = {
   member: 'Anggota',
 };
 
-// Routes that should have sidebar collapsed by default (need wide view)
-const WIDE_VIEW_ROUTES = ['/rekapitulasi-kas', '/peringkat'];
 
-// Desktop sidebar navigation (full list)
+
+
 const sidebarNav = [
   { to: '/', label: 'Beranda', icon: Home },
   { to: '/kalender', label: 'Kalender GenBI', icon: CalendarDays },
@@ -32,7 +31,7 @@ const sidebarNav = [
   { to: '/profile', label: 'Profile', icon: UserRound },
 ];
 
-// Mobile bottom navigation (6 items - profile moved to header)
+
 const mobileNav = [
   { to: '/', label: 'Beranda', icon: Home },
   { to: '/kalender', label: 'Kalender', icon: CalendarDays },
@@ -40,6 +39,13 @@ const mobileNav = [
   { to: '/dispensasi', label: 'Surat', icon: FileText },
   { to: '/anggota', label: 'Anggota', icon: Users },
   { to: '/rekapitulasi-kas', label: 'Kas', icon: Wallet },
+];
+
+const WIDE_VIEW_ROUTES = [
+  '/kalender',
+  '/anggota',
+  '/rekapitulasi-kas',
+  '/peringkat',
 ];
 
 export default function Layout() {
@@ -52,14 +58,14 @@ export default function Layout() {
   const { confirm } = useConfirm();
   const toast = useToast();
 
-  // Auto-collapse sidebar when navigating to wide view routes
+
   useEffect(() => {
     if (isWideViewRoute) {
       setCollapsed(true);
     }
   }, [isWideViewRoute, location.pathname]);
 
-  // Sync user data on mount
+
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -68,26 +74,26 @@ export default function Layout() {
           setUser(freshUser);
         }
       } catch (err) {
-        // Check if session expired (401 error)
+
         if (err?.status === 401) {
           toast.push('Sesi login telah berakhir. Silakan login kembali.', 'error');
           navigate('/login', { replace: true });
           return;
         }
-        // Use cached data if sync fails for other reasons
+
         console.warn('Failed to sync user data:', err);
       }
     };
     loadUser();
   }, [navigate]);
 
-  // Extract user info
+
   const userName = user?.profile?.name || user?.name || user?.email?.split('@')[0] || 'Pengguna';
   const userRole = user?.role || 'awardee';
   const userRoleLabel = ROLE_LABELS[userRole] || 'Anggota';
   const userAvatar = user?.profile?.avatar || user?.avatar || null;
 
-  // Check if user has admin/elevated privileges
+
   const isAdmin = ['admin', 'ketua', 'wakil', 'bendahara', 'sekretaris'].includes(userRole);
 
   const Brand = useMemo(
@@ -124,9 +130,9 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-neutral-50 text-neutral-800">
       <div className="flex">
-        {/* Sidebar (desktop only) */}
+
         <aside className={`sticky top-0 hidden md:flex h-screen flex-col border-r border-neutral-200 bg-[rgb(255,255,255)] transition-[width] duration-200 ${collapsed ? 'w-[88px]' : 'w-[264px]'}`}>
-          {/* Header sidebar */}
+
           <div className={`flex items-center border-b border-neutral-200 ${collapsed ? 'justify-center py-3' : 'justify-between px-3 py-3'}`}>
             {Brand}
             <button type="button" aria-label={collapsed ? 'Buka sidebar' : 'Ciutkan sidebar'} onClick={() => setCollapsed((s) => !s)} className="inline-grid h-9 w-9 place-items-center rounded-lg border border-neutral-200 focus-ring">
@@ -169,20 +175,20 @@ export default function Layout() {
           </div>
         </aside>
 
-        {/* Main */}
+
         <div className="flex min-h-screen flex-1 flex-col">
-          {/* Header */}
+
           <header className="sticky top-0 z-[10000] border-b border-neutral-200 bg-white shadow-soft-sm isolate">
             <div className="flex items-center gap-3 px-4 py-3 md:px-8 md:py-4">
-              {/* Mobile: Show logo */}
+
               <div className="flex md:hidden items-center gap-2.5">
                 <img src="/favicon-genbi.webp" alt="GenBI" className="h-9 w-9 rounded-md border border-neutral-200 object-cover" />
                 <h2 className="text-base font-semibold text-neutral-900">Portal GenBI</h2>
               </div>
-              {/* Desktop: Full title */}
+
               <h2 className="hidden md:block text-base font-semibold text-neutral-900">Portal GenBI Unsika</h2>
 
-              {/* User Info - Desktop & Mobile */}
+
               <NavLink to="/profile" className="ml-auto flex items-center gap-1.5 md:gap-3 rounded-xl border border-neutral-200 bg-[rgb(255,255,255)] px-1.5 py-1 md:px-3 md:py-1.5 hover:bg-neutral-50 transition-colors">
                 <Avatar name={userName} src={userAvatar} size={24} className="md:w-7 md:h-7" />
                 <div className="flex flex-col">
@@ -193,12 +199,12 @@ export default function Layout() {
             </div>
           </header>
 
-          {/* Main content with bottom padding for mobile nav */}
+
           <main className="flex-1 p-4 pb-20 md:p-8 md:pb-8 lg:p-10 lg:pb-10">
             <Outlet context={{ user, isAdmin, userRole }} />
           </main>
 
-          {/* Mobile Bottom Navigation */}
+
           <nav className="bottom-nav md:hidden">
             <div className="flex items-center justify-around">
               {mobileNav.map(({ to, label, icon: Icon }) => (

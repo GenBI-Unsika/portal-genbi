@@ -30,12 +30,12 @@ async function readJsonSafe(res) {
   }
 }
 
-// Track if we're currently refreshing to avoid race conditions
+// Lacak status refresh untuk menghindari race condition
 let isRefreshing = false;
 let refreshPromise = null;
 
 /**
- * Attempt to refresh the access token using the refresh token cookie
+ * Coba refresh access token menggunakan cookie
  */
 async function tryRefreshToken() {
   if (isRefreshing && refreshPromise) {
@@ -51,7 +51,7 @@ async function tryRefreshToken() {
       });
 
       if (!res.ok) {
-        // Refresh failed - clear token and redirect to login
+
         setAccessToken(null);
         localStorage.removeItem('me');
         return null;
@@ -62,7 +62,7 @@ async function tryRefreshToken() {
 
       if (newToken) {
         setAccessToken(newToken);
-        // Also update user data if available
+
         if (json?.data?.user) {
           localStorage.setItem('me', JSON.stringify(json.data.user));
         }
@@ -112,14 +112,14 @@ export async function apiFetch(path, options = {}) {
 
   const json = await readJsonSafe(res);
 
-  // Handle 401 Unauthorized - try to refresh token
+
   if (res.status === 401 && !skipAuth && !options._retry) {
     const newToken = await tryRefreshToken();
     if (newToken) {
-      // Retry the original request with new token
+
       return apiFetch(path, { ...options, _retry: true });
     }
-    // Refresh failed - throw error (will redirect to login)
+
     const message = 'Sesi login telah berakhir. Silakan login kembali.';
     throw new ApiError({ status: 401, message, details: null });
   }
@@ -180,7 +180,7 @@ export async function updateMyProfile(profileData) {
 }
 
 // ───────────────────────────────────────────────
-// Teams / Members
+// Tim / Anggota
 // ───────────────────────────────────────────────
 
 export async function fetchTeamMembers() {
@@ -188,13 +188,13 @@ export async function fetchTeamMembers() {
   return json?.data || [];
 }
 
-// Admin: get all team members (including inactive)
+// Admin: ambil semua anggota tim (termasuk yang tidak aktif)
 export async function fetchAllTeamMembers() {
   const json = await apiFetch('/teams/admin/all', { method: 'GET' });
   return json?.data || [];
 }
 
-// Admin: create team member
+// Admin: buat anggota tim
 export async function createTeamMember(data) {
   const json = await apiFetch('/teams', {
     method: 'POST',
@@ -203,7 +203,7 @@ export async function createTeamMember(data) {
   return json?.data;
 }
 
-// Admin: update team member
+// Admin: update anggota tim
 export async function updateTeamMember(id, data) {
   const json = await apiFetch(`/teams/${id}`, {
     method: 'PATCH',
@@ -212,7 +212,7 @@ export async function updateTeamMember(id, data) {
   return json?.data;
 }
 
-// Admin: delete team member
+// Admin: hapus anggota tim
 export async function deleteTeamMember(id) {
   const json = await apiFetch(`/teams/${id}`, {
     method: 'DELETE',
@@ -221,7 +221,7 @@ export async function deleteTeamMember(id) {
 }
 
 // ───────────────────────────────────────────────
-// Divisions
+// Divisi
 // ───────────────────────────────────────────────
 
 export async function fetchDivisions() {
@@ -243,7 +243,7 @@ export async function fetchDivisionByKey(key) {
 }
 
 // ───────────────────────────────────────────────
-// Events / Calendar
+// Event / Kalender
 // ───────────────────────────────────────────────
 
 export async function fetchEvents() {
@@ -256,7 +256,7 @@ export async function fetchEvents() {
 }
 
 // ───────────────────────────────────────────────
-// Google Calendar Integration
+// Integrasi Google Calendar
 // ───────────────────────────────────────────────
 
 export async function getCalendarConfig() {
@@ -286,11 +286,11 @@ export function getExportCalendarUrl(eventId) {
 }
 
 // ───────────────────────────────────────────────
-// Leaderboard / Points
+// Leaderboard / Poin
 // ───────────────────────────────────────────────
 
 export async function fetchLeaderboard() {
-  // TODO: Create /leaderboard endpoint on server
+
   try {
     const json = await apiFetch('/leaderboard', { method: 'GET' });
     return json?.data || [];
@@ -299,7 +299,7 @@ export async function fetchLeaderboard() {
   }
 }
 
-// Admin: Create point record
+// Admin: Buat record poin
 export async function createPointRecord(data) {
   const json = await apiFetch('/leaderboard/points', {
     method: 'POST',
@@ -308,7 +308,7 @@ export async function createPointRecord(data) {
   return json?.data;
 }
 
-// Admin: Update point record
+// Admin: Update record poin
 export async function updatePointRecord(memberId, activityIndex, data) {
   const json = await apiFetch(`/leaderboard/points/${memberId}/${activityIndex}`, {
     method: 'PATCH',
@@ -317,7 +317,7 @@ export async function updatePointRecord(memberId, activityIndex, data) {
   return json?.data;
 }
 
-// Admin: Delete point record
+// Admin: Hapus record poin
 export async function deletePointRecord(memberId, activityIndex) {
   const json = await apiFetch(`/leaderboard/points/${memberId}/${activityIndex}`, {
     method: 'DELETE',
@@ -326,7 +326,7 @@ export async function deletePointRecord(memberId, activityIndex) {
 }
 
 // ───────────────────────────────────────────────
-// Treasury / Kas
+// Bendahara / Kas
 // ───────────────────────────────────────────────
 
 export async function fetchTreasuryRecap() {
@@ -339,7 +339,7 @@ export async function fetchTreasuryRecap() {
 }
 
 export async function createTreasuryRecord(data) {
-  // Create single entry (memberId + period + amount)
+
   const json = await apiFetch('/treasury', {
     method: 'POST',
     body: data,
@@ -348,7 +348,7 @@ export async function createTreasuryRecord(data) {
 }
 
 export async function updateTreasuryRecord(memberId, period, data) {
-  // Uses POST which does upsert
+
   const json = await apiFetch('/treasury', {
     method: 'POST',
     body: { memberId, period, ...data },
@@ -357,7 +357,7 @@ export async function updateTreasuryRecord(memberId, period, data) {
 }
 
 export async function updateTreasuryMember(memberId, monthsData) {
-  // Bulk update all months for a member (row-based)
+
   const json = await apiFetch(`/treasury/member/${memberId}`, {
     method: 'PUT',
     body: monthsData,
@@ -388,7 +388,7 @@ export async function fetchStudyPrograms(facultyId) {
 }
 
 // ───────────────────────────────────────────────
-// My Points / Perpointan
+// Poin Saya
 // ───────────────────────────────────────────────
 
 export async function fetchMyPoints() {
@@ -401,7 +401,7 @@ export async function fetchMyPoints() {
 }
 
 // ───────────────────────────────────────────────
-// My Treasury / Uang Kas
+// Uang Kas Saya
 // ───────────────────────────────────────────────
 
 export async function fetchMyTreasury() {
@@ -414,7 +414,7 @@ export async function fetchMyTreasury() {
 }
 
 // ───────────────────────────────────────────────
-// Dispensations
+// Dispensasi
 // ───────────────────────────────────────────────
 
 export async function fetchMyDispensations() {
@@ -434,7 +434,7 @@ export async function createDispensation(data) {
   return json?.data;
 }
 
-// Member: Update my dispensation (only when still DIAJUKAN)
+// Member: Update dispensasi saya (hanya jika masih DIAJUKAN)
 export async function updateDispensation(id, data) {
   const json = await apiFetch(`/dispensations/${id}`, {
     method: 'PATCH',
@@ -443,7 +443,7 @@ export async function updateDispensation(id, data) {
   return json?.data;
 }
 
-// Member: Withdraw (delete) my dispensation
+// Member: Tarik kembali (hapus) dispensasi saya
 export async function deleteDispensation(id) {
   const json = await apiFetch(`/dispensations/${id}`, {
     method: 'DELETE',
@@ -451,7 +451,7 @@ export async function deleteDispensation(id) {
   return json;
 }
 
-// Admin: Fetch all dispensations
+// Admin: Ambil semua dispensasi
 export async function fetchAllDispensations() {
   try {
     const json = await apiFetch('/dispensations', { method: 'GET' });
@@ -461,7 +461,7 @@ export async function fetchAllDispensations() {
   }
 }
 
-// Admin: Update dispensation status
+// Admin: Update status dispensasi
 export async function updateDispensationStatus(id, data) {
   const json = await apiFetch(`/dispensations/${id}/status`, {
     method: 'PATCH',
@@ -470,7 +470,7 @@ export async function updateDispensationStatus(id, data) {
   return json?.data;
 }
 
-// Admin: Get active dispensation template
+// Admin: Ambil template dispensasi aktif
 export async function fetchDispensationTemplate() {
   try {
     const json = await apiFetch('/dispensations/template/active', { method: 'GET' });
@@ -480,7 +480,7 @@ export async function fetchDispensationTemplate() {
   }
 }
 
-// Admin: Upload dispensation template
+// Admin: Upload template dispensasi
 export async function uploadDispensationTemplate(file) {
   const formData = new FormData();
   formData.append('template', file);
@@ -505,7 +505,7 @@ export async function uploadDispensationTemplate(file) {
   return await res.json();
 }
 
-// Admin: Delete dispensation template
+// Admin: Hapus template dispensasi
 export async function deleteDispensationTemplate(id) {
   const json = await apiFetch(`/dispensations/template/${id}`, {
     method: 'DELETE',
@@ -513,7 +513,7 @@ export async function deleteDispensationTemplate(id) {
   return json;
 }
 
-// Admin: Generate letter for approved dispensation
+// Admin: Generate surat untuk dispensasi yang disetujui
 export async function generateDispensationLetter(id) {
   const json = await apiFetch(`/dispensations/${id}/generate-letter`, {
     method: 'POST',

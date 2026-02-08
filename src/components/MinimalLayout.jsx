@@ -37,7 +37,7 @@ export default function MinimalLayout() {
   const { confirm } = useConfirm();
   const toast = useToast();
 
-  // Sync user data on mount
+
   useEffect(() => {
     const loadUser = async () => {
       try {
@@ -57,13 +57,13 @@ export default function MinimalLayout() {
     loadUser();
   }, [navigate]);
 
-  // Extract user info
+
   const userName = user?.profile?.name || user?.name || user?.email?.split('@')[0] || 'Pengguna';
   const userRole = user?.role || 'awardee';
   const userRoleLabel = ROLE_LABELS[userRole] || 'Anggota';
   const userAvatar = user?.profile?.avatar || user?.avatar || null;
 
-  // Check if user has admin/elevated privileges
+
   const isAdmin = ['admin', 'ketua', 'wakil', 'bendahara', 'sekretaris'].includes(userRole);
 
   const doLogout = async () => {
@@ -86,7 +86,7 @@ export default function MinimalLayout() {
     }
   };
 
-  // Get current page title
+
   const getCurrentPageTitle = () => {
     const current = navItems.find((item) => location.pathname === item.to || location.pathname.startsWith(item.to + '/'));
     return current?.label || 'Portal GenBI';

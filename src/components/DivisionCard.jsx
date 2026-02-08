@@ -24,9 +24,17 @@ export default function DivisionCard({ divisionKey, title, members = [], descrip
     >
       {/* Banner area with photo placeholder */}
       <div className="relative h-24 sm:h-32 flex items-center justify-center overflow-hidden bg-neutral-100">
-        {/* Background image */}
-        <img src="https://placehold.co/600x400" alt="" className="absolute inset-0 w-full h-full object-cover" />
-
+        <div className="absolute inset-0 flex items-center justify-center text-neutral-500">
+          <div className="w-12 h-12 rounded-full bg-white/70 flex items-center justify-center shadow-sm">
+            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" aria-hidden="true">
+              <path
+                d="m 4 1 c -1.644531 0 -3 1.355469 -3 3 v 1 h 1 v -1 c 0 -1.109375 0.890625 -2 2 -2 h 1 v -1 z m 2 0 v 1 h 4 v -1 z m 5 0 v 1 h 1 c 1.109375 0 2 0.890625 2 2 v 1 h 1 v -1 c 0 -1.644531 -1.355469 -3 -3 -3 z m -5 4 c -0.550781 0 -1 0.449219 -1 1 s 0.449219 1 1 1 s 1 -0.449219 1 -1 s -0.449219 -1 -1 -1 z m -5 1 v 4 h 1 v -4 z m 13 0 v 4 h 1 v -4 z m -4.5 2 l -2 2 l -1.5 -1 l -2 2 v 0.5 c 0 0.5 0.5 0.5 0.5 0.5 h 7 s 0.472656 -0.035156 0.5 -0.5 v -1 z m -8.5 3 v 1 c 0 1.644531 1.355469 3 3 3 h 1 v -1 h -1 c -1.109375 0 -2 -0.890625 -2 -2 v -1 z m 13 0 v 1 c 0 1.109375 -0.890625 2 -2 2 h -1 v 1 h 1 c 1.644531 0 3 -1.355469 3 -3 v -1 z m -8 3 v 1 h 4 v -1 z m 0 0"
+                fill="currentColor"
+                fillOpacity="0.55"
+              />
+            </svg>
+          </div>
+        </div>
         {/* Overlay gradient for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-br from-black/20 to-transparent" />
       </div>

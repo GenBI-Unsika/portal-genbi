@@ -3,12 +3,24 @@ import { GoogleLogin } from '@react-oauth/google';
 export default function GoogleLoginButton({ onIdToken, onError }) {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
+  const reportError = (userMessage, error) => {
+    if (import.meta.env.DEV) {
+      console.error('[Google Sign-In]', userMessage, {
+        origin: window.location.origin,
+        clientId,
+        error,
+      });
+      console.info('[Google Sign-In] If you see “origin not allowed”, add this origin to Google Cloud Console → OAuth Client → Authorized JavaScript origins:', window.location.origin);
+    }
+    onError?.(userMessage);
+  };
+
   if (!clientId) {
     return (
       <button
         type="button"
         className="w-full px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium text-gray-700 flex items-center justify-center gap-3"
-        onClick={() => onError?.('Google login belum dikonfigurasi. Isi VITE_GOOGLE_CLIENT_ID di .env lalu restart dev server.')}
+        onClick={() => reportError('Login Google belum tersedia. Hubungi admin.', 'Missing VITE_GOOGLE_CLIENT_ID')}
       >
         <svg className="w-5 h-5" viewBox="0 0 24 24">
           <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -26,14 +38,14 @@ export default function GoogleLoginButton({ onIdToken, onError }) {
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           const idToken = credentialResponse?.credential;
-          if (!idToken) return onError?.('Google credential tidak ditemukan');
+          if (!idToken) return reportError('Login Google gagal. Silakan coba lagi.', 'Missing credential');
           onIdToken?.(idToken);
         }}
-        onError={() => onError?.('Login Google gagal')}
+        onError={() => reportError('Login Google gagal. Silakan coba lagi.', 'GoogleLogin onError')}
         useOneTap={false}
         theme="outline"
         size="large"
-        width="100%"
+
         text="signin_with"
         locale="id"
       />

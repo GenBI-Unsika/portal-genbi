@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ==================== TOKENS ==================== */
+
 :root {
   /* Primary */
   --primary-50: 227 238 252;
@@ -63,7 +63,7 @@
   --shadow-glow-secondary: 0 0 20px rgb(236 26 35 / 0.15);
 }
 
-/* ==================== BASE ==================== */
+
 @layer base {
   /* Mobile-first responsive root font sizing */
   html {
@@ -160,7 +160,7 @@
   }
 }
 
-/* ==================== TYPOGRAPHY DESIGN SYSTEM ==================== */
+
 /* 
  * Standardized responsive text utilities
  * Mobile-first: smaller base, scales up on tablet (sm) and desktop (lg)
@@ -328,7 +328,7 @@
   .text-btn { font-size: 0.9375rem; }     /* 15px desktop */
 }
 
-/* ==================== COLOR UTILITIES ==================== */
+
 /* bg */
 .bg-primary-50 {
   background: rgb(var(--primary-50));
@@ -537,7 +537,7 @@
   border-color: rgb(var(--neutral-300));
 }
 
-/* ==================== COMPONENT UTILITIES (SOFT SHADOWS) ==================== */
+
 .card {
   border: 1px solid rgb(var(--neutral-200));
   border-radius: 20px;
@@ -707,7 +707,7 @@
     border-color 0.2s var(--motion-ease);
 }
 
-/* ==================== ENHANCED ANIMATIONS ==================== */
+
 
 /* Fade In Up - main page entrance */
 @keyframes fadeInUp {
@@ -946,7 +946,7 @@
 /* Utility */
 .text-balance{ text-wrap: balance; }
 
-/* ==================== Mobile Drawer / Hamburger ==================== */
+
 .drawer-slide-in{ transform: translateX(-6px) scale(0.995); opacity: 0; }
 .drawer-open .drawer-slide-in{ transform: translateX(0) scale(1); opacity: 1; }
 
@@ -962,7 +962,7 @@
 /* make images responsive by default */
 img{ max-width:100%; height:auto; }
 
-/* ==================== MOBILE-FIRST UTILITIES ==================== */
+
 /* Touch-friendly tap targets */
 @media (max-width: 767px) {
   /* Ensure minimum touch target size */
@@ -1179,7 +1179,7 @@ img{ max-width:100%; height:auto; }
   }
 }
 
-/* ==================== MOBILE-FIRST PAGE SYSTEM ==================== */
+
 /* Page container with consistent spacing */
 .page-container {
   padding: 1rem; /* 16px mobile */
