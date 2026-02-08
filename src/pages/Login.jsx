@@ -6,7 +6,7 @@ import { useConfirm } from '../contexts/ConfirmContext.jsx';
 import GoogleLoginButton from '../components/GoogleLoginButton.jsx';
 import { Eye, EyeOff, Loader2 } from 'lucide-react';
 
-// Keys for localStorage form persistence (NOT for auth data)
+
 const FORM_STORAGE_KEY = 'portal_login_form_draft';
 
 function defaultPasswordFromEmail(email) {
@@ -33,7 +33,7 @@ export default function Login() {
   const toast = useToast();
   const { confirm } = useConfirm();
 
-  // Restore form draft on mount (untuk UX agar tidak hilang jika error)
+
   useEffect(() => {
     try {
       const saved = localStorage.getItem(FORM_STORAGE_KEY);
@@ -42,12 +42,12 @@ export default function Login() {
         if (savedEmail) setEmail(savedEmail);
         if (savedRemember) setRememberMe(savedRemember);
       }
-    } catch {
-      // ignore parse errors
-    }
+    } catch { }
+
+
   }, []);
 
-  // Save form draft when email changes (NOT password for security)
+
   useEffect(() => {
     if (rememberMe && email) {
       localStorage.setItem(FORM_STORAGE_KEY, JSON.stringify({ email, rememberMe }));
@@ -89,7 +89,7 @@ export default function Login() {
 
     if (!validateForm()) return;
 
-    // Confirm before login
+
     const ok = await confirm({
       title: 'Masuk?',
       description: `Anda akan login sebagai "${email.trim()}".`,
@@ -104,7 +104,7 @@ export default function Login() {
     try {
       await login(email, password);
 
-      // Clear form draft after successful login
+
       if (!rememberMe) {
         clearFormDraft();
       }
@@ -151,7 +151,7 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-100 p-4">
       <div className="w-full max-w-md bg-white border border-neutral-200 rounded-3xl p-8 sm:p-10 animate-scale-in">
-        {/* Logo */}
+
         <div className="flex justify-center mb-6">
           <img
             src="/favicon-genbi.webp"
@@ -163,15 +163,15 @@ export default function Login() {
           />
         </div>
 
-        {/* Title */}
+
         <h1 className="text-2xl font-bold text-center text-neutral-900 mb-2">Masuk</h1>
         <p className="text-sm text-center text-neutral-500 mb-6">Masukkan email dan password Anda di bawah ini untuk masuk.</p>
 
-        {/* Error Alert */}
+
         {error && <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">{error}</div>}
 
         <form onSubmit={submit} className="space-y-4">
-          {/* Email Field */}
+
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-1.5">Email</label>
             <input
@@ -185,7 +185,7 @@ export default function Login() {
             />
           </div>
 
-          {/* Password Field */}
+
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="block text-sm font-medium text-neutral-700">Password</label>
@@ -215,7 +215,7 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Remember Me */}
+
           <div className="flex items-center gap-2">
             <input type="checkbox" id="rememberMe" checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)} className="w-4 h-4 rounded border-neutral-300 text-blue-600 focus:ring-blue-500" disabled={loading} />
             <label htmlFor="rememberMe" className="text-sm text-neutral-600 select-none cursor-pointer">
@@ -223,7 +223,7 @@ export default function Login() {
             </label>
           </div>
 
-          {/* Submit Button */}
+
           <button type="submit" disabled={loading} className="w-full h-11 bg-neutral-900 hover:bg-neutral-800 disabled:bg-neutral-400 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
             {loading ? (
               <>
@@ -235,7 +235,7 @@ export default function Login() {
             )}
           </button>
 
-          {/* Divider */}
+
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-neutral-200" />
@@ -245,12 +245,12 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Google Login */}
+
           <div className="flex justify-center">
             <GoogleLoginButton onIdToken={handleGoogleLogin} onError={handleGoogleError} />
           </div>
 
-          {/* Register Link */}
+
           <p className="text-center text-sm text-neutral-500 mt-6">
             Tidak memiliki akun?{' '}
             <button

@@ -8,7 +8,7 @@ import LoadingState from '../components/ui/LoadingState.jsx';
 import EmptyState from '../components/EmptyState.jsx';
 import Modal from '../components/Modal.jsx';
 
-// Utility function to generate month matrix
+
 function monthMatrix(year, month) {
   const firstDay = new Date(year, month, 1);
   const lastDay = new Date(year, month + 1, 0);
@@ -80,7 +80,7 @@ export default function ModernCalendar() {
   const [loading, setLoading] = useState(true);
   const [urlEventProcessed, setUrlEventProcessed] = useState(false);
 
-  // Fetch events from API on mount
+
   useEffect(() => {
     const loadEvents = async () => {
       setLoading(true);
@@ -97,7 +97,7 @@ export default function ModernCalendar() {
     loadEvents();
   }, []);
 
-  // Fetch members for birthday overlay (non-blocking)
+
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -114,7 +114,7 @@ export default function ModernCalendar() {
     };
   }, []);
 
-  // Handle URL parameters for event navigation (from Home page)
+
   useEffect(() => {
     if (loading || urlEventProcessed) return;
 
@@ -154,7 +154,7 @@ export default function ModernCalendar() {
 
   const matrix = useMemo(() => monthMatrix(year, month), [year, month]);
 
-  // Get event mode from API response, fallback to local calculation
+
   const getEventMode = useCallback((event) => {
     // Use mode from API if available
     if (event.mode === 'online' || event.mode === 'offline') {
@@ -383,9 +383,9 @@ export default function ModernCalendar() {
 
   return (
     <div className="min-h-screen bg-neutral-50 page-enter -m-3 sm:-m-4 md:-m-6">
-      {/* ============ MOBILE VIEW (Google Calendar Style) ============ */}
+
       <div className="md:hidden flex flex-col h-[calc(100vh-60px)]">
-        {/* Mobile Header - Compact */}
+
         <div className="bg-white border-b border-neutral-200 px-3 py-2 sticky top-0 z-20">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-1">
@@ -407,7 +407,7 @@ export default function ModernCalendar() {
           </div>
         </div>
 
-        {/* Mini Calendar Grid - Google Calendar Style */}
+
         <div className="bg-white border-b border-neutral-200 px-2 py-1.5">
           {/* Day headers */}
           <div className="grid grid-cols-7 mb-0.5">
@@ -452,7 +452,7 @@ export default function ModernCalendar() {
           </div>
         </div>
 
-        {/* Agenda View - Events for Selected Date */}
+
         <div className="flex-1 overflow-y-auto bg-neutral-50">
           {selectedDate && (
             <div className="px-3 py-2">
@@ -562,8 +562,8 @@ export default function ModernCalendar() {
         </div>
       </div>
 
-      {/* ============ DESKTOP VIEW ============ */}
-      {/* Top Navigation Bar */}
+
+
       <div className="hidden md:block px-6 py-3">
         <div className="bg-white p-2 sm:p-3 md:p-4 rounded-lg sm:rounded-xl sticky top-0 z-10 shadow-sm border border-neutral-200 animate-fade-in">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 sm:gap-3">
@@ -626,7 +626,7 @@ export default function ModernCalendar() {
         </div>
       </div>
 
-      {/* Main Calendar - Desktop only */}
+
       <div className="hidden md:block px-6 py-4">
         <div className="bg-white rounded-2xl border border-neutral-200 overflow-hidden shadow-sm">
           {/* Day Headers (desktop only) */}
@@ -650,9 +650,8 @@ export default function ModernCalendar() {
               return (
                 <div
                   key={i}
-                  className={`min-h-[120px] border-r border-b border-neutral-100 last:border-r-0 ${!inMonth ? 'bg-neutral-50/60' : 'bg-white'} ${
-                    isWeekend && inMonth ? 'bg-blue-50/20' : ''
-                  } hover:bg-blue-50/40 transition-colors group relative`}
+                  className={`min-h-[120px] border-r border-b border-neutral-100 last:border-r-0 ${!inMonth ? 'bg-neutral-50/60' : 'bg-white'} ${isWeekend && inMonth ? 'bg-blue-50/20' : ''
+                    } hover:bg-blue-50/40 transition-colors group relative`}
                 >
                   <div className="p-2 h-full flex flex-col">
                     {/* Date number & add button */}
@@ -705,7 +704,7 @@ export default function ModernCalendar() {
         </div>
       </div>
 
-      {/* Event Detail Modal */}
+
       {selectedEvent && (
         <Modal isOpen={Boolean(selectedEvent)} onClose={() => setSelectedEvent(null)} zIndex="z-[9998]">
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-xl border border-neutral-200 max-w-md w-full overflow-hidden">

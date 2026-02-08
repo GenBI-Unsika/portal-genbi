@@ -37,16 +37,16 @@ export default function DivisionDetail() {
     async function loadData() {
       setLoading(true);
       try {
-        // Fetch both members and division metadata in parallel
+
         const [allMembers, divisionData] = await Promise.all([
           fetchMembers(),
           fetchDivisionByKey(divisionKey),
         ]);
-        
+
         const grouped = groupByDivision(allMembers);
         setMembers(grouped[divisionKey] || []);
-        
-        // Set meta from API or use fallback
+
+
         if (divisionData) {
           setMeta({
             name: divisionData.name,
@@ -58,7 +58,7 @@ export default function DivisionDetail() {
             gradient: divisionData.gradient || defaultMeta.gradient,
           });
         } else {
-          // Fallback: generate name from key
+
           setMeta({
             name: divisionKey
               .split('-')

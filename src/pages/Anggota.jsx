@@ -46,7 +46,7 @@ export default function Anggota() {
   const { data: members, loading: membersLoading, error: membersError, refetch: refetchMembers } = useApi(membersFetcher);
   const { data: divisionsData, loading: divisionsLoading, error: divisionsError, refetch: refetchDivisions } = useApi(divisionsFetcher);
 
-  // Create divisionMeta lookup from API data
+
   const divisionMeta = useMemo(() => {
     if (!divisionsData || divisionsData.length === 0) return {};
     const meta = {};
@@ -64,7 +64,7 @@ export default function Anggota() {
     return meta;
   }, [divisionsData]);
 
-  // Group members by division
+
   const groupedMembers = useMemo(() => {
     if (!members || members.length === 0) return {};
     const groups = {};
@@ -84,7 +84,7 @@ export default function Anggota() {
     return groups;
   }, [members]);
 
-  // Build divisions list from grouped data with API metadata
+
   const divisions = useMemo(() => {
     const keys = Object.keys(groupedMembers);
     return keys.map((key) => {
@@ -100,7 +100,7 @@ export default function Anggota() {
     });
   }, [groupedMembers, divisionMeta]);
 
-  // Filtered divisions based on search
+
   const filteredDivisions = useMemo(() => {
     if (!searchQuery.trim()) return divisions;
     const q = searchQuery.toLowerCase();
@@ -111,7 +111,7 @@ export default function Anggota() {
     });
   }, [divisions, groupedMembers, searchQuery]);
 
-  // Total members count
+
   const totalMembers = members?.length || 0;
 
   const handleMemberClick = (m) => {

@@ -18,7 +18,7 @@ export default function Home() {
   const me = useMemo(() => getMe(), []);
   const userName = me?.profile?.name || me?.name || me?.email || 'Pengguna';
 
-  // Fetch data from API
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
@@ -37,7 +37,7 @@ export default function Home() {
     loadData();
   }, []);
 
-  // Derive statistics from real data
+
   const totalMembers = members.length;
   const divisions = useMemo(() => {
     const divSet = new Set(members.map((m) => m.division).filter(Boolean));
@@ -45,9 +45,8 @@ export default function Home() {
   }, [members]);
   const totalDivisions = divisions.length;
 
-  // Calculate treasury (placeholder until API ready)
+
   const totalCollected = useMemo(() => {
-    // TODO: Fetch from treasury API
     return totalMembers * monthlyFee * 6; // Estimate: 6 months
   }, [totalMembers]);
 
@@ -121,7 +120,7 @@ export default function Home() {
     setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + direction, 1));
   };
 
-  // Navigate to calendar with event date and event id
+
   const handleEventClick = (event) => {
     navigate(`/kalender?date=${event.date}&eventId=${event.id}`);
   };
@@ -149,14 +148,13 @@ export default function Home() {
       days.push(
         <div
           key={day}
-          className={`h-10 w-10 flex items-center justify-center rounded-full transition-all cursor-pointer group relative mx-auto font-semibold text-xs ${
-            isToday ? 'bg-blue-600 text-white' : isSunday ? 'text-red-600' : hasEvent ? 'text-neutral-900 hover:bg-blue-100' : 'text-neutral-900'
-          }`}
+          className={`h-10 w-10 flex items-center justify-center rounded-full transition-all cursor-pointer group relative mx-auto font-semibold text-xs ${isToday ? 'bg-blue-600 text-white' : isSunday ? 'text-red-600' : hasEvent ? 'text-neutral-900 hover:bg-blue-100' : 'text-neutral-900'
+            }`}
         >
           {day}
           {hasEvent && <div className="absolute top-1 right-2 w-2 h-2 bg-red-600 rounded-full z-40" />}
 
-          {/* Events - hanya muncul saat hover */}
+
           {hasEvent && (
             <div className="hidden group-hover:block absolute left-1/2 -translate-x-1/2 top-full mt-1 bg-white border border-neutral-200 rounded-lg shadow-lg p-2 w-48 z-[9999]">
               {dayEvents.slice(0, 3).map((ev) => (
@@ -190,7 +188,7 @@ export default function Home() {
             background: 'linear-gradient(120deg, #1e3a8a 0%, #3b82f6 100%)',
           }}
         >
-          {/* Animated gradient overlay */}
+
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20" />
 
           <div className="flex items-center justify-between relative z-10">

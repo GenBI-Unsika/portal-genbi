@@ -63,9 +63,9 @@ export default function Kalender() {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterType, setFilterType] = useState('all'); // 'all' | 'online' | 'offline'
+  const [filterType, setFilterType] = useState('all');
 
-  // Fetch events from API
+
   useEffect(() => {
     const loadEvents = async () => {
       setLoading(true);
@@ -84,13 +84,13 @@ export default function Kalender() {
 
   const matrix = useMemo(() => monthMatrix(year, month), [year, month]);
 
-  // Get event mode from API response, fallback to local calculation
+
   const getEventMode = useCallback((event) => {
-    // Use mode from API if available
+
     if (event.mode === 'online' || event.mode === 'offline') {
       return event.mode;
     }
-    // Fallback: calculate from type/location
+
     const type = (event.type || '').toLowerCase();
     if (type === 'online') return 'online';
     if (type === 'offline') return 'offline';
@@ -101,7 +101,7 @@ export default function Kalender() {
     return 'offline';
   }, []);
 
-  // Filter events based on search and type filter
+
   const filteredEvents = useMemo(() => {
     const q = searchQuery.toLowerCase().trim();
     return events.filter((e) => {
@@ -112,7 +112,7 @@ export default function Kalender() {
     });
   }, [events, searchQuery, filterType, getEventMode]);
 
-  // Group events by date
+
   const eventsByDay = useMemo(() => {
     const m = {};
     for (const e of filteredEvents) {
@@ -121,14 +121,14 @@ export default function Kalender() {
     return m;
   }, [filteredEvents]);
 
-  // Get events for selected date
+
   const selectedDateEvents = useMemo(() => {
     if (!selectedDate) return [];
     const dateStr = selectedDate.toISOString().slice(0, 10);
     return eventsByDay[dateStr] || [];
   }, [selectedDate, eventsByDay]);
 
-  // Upcoming events (next 5)
+
   const upcomingEvents = useMemo(() => {
     const todayStr = today.toISOString().slice(0, 10);
     return filteredEvents
@@ -165,7 +165,7 @@ export default function Kalender() {
     return d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
   };
 
-  // Open event detail modal using global modal context
+
   const openEventModal = useCallback(
     (event) => {
       openModal(<EventDetailModal event={event} onClose={closeModal} />);
@@ -199,9 +199,8 @@ export default function Kalender() {
                 <button
                   key={f.key}
                   onClick={() => setFilterType(f.key)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${
-                    filterType === f.key ? 'bg-white text-primary-700 shadow-sm border border-neutral-200' : 'text-neutral-600 hover:bg-neutral-200'
-                  }`}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all ${filterType === f.key ? 'bg-white text-primary-700 shadow-sm border border-neutral-200' : 'text-neutral-600 hover:bg-neutral-200'
+                    }`}
                 >
                   <f.icon className="w-4 h-4" />
                   <span className="hidden sm:inline">{f.label}</span>
@@ -271,17 +270,15 @@ export default function Kalender() {
                   <div
                     key={i}
                     onClick={() => setSelectedDate(date)}
-                    className={`min-h-[100px] md:min-h-[110px] border-r border-b border-neutral-100 last:border-r-0 cursor-pointer transition-colors group ${
-                      !inMonth ? 'bg-neutral-50/60' : 'bg-white'
-                    } ${isSelectedDate ? 'bg-primary-50 ring-2 ring-primary-500 ring-inset' : 'hover:bg-neutral-50'}`}
+                    className={`min-h-[100px] md:min-h-[110px] border-r border-b border-neutral-100 last:border-r-0 cursor-pointer transition-colors group ${!inMonth ? 'bg-neutral-50/60' : 'bg-white'
+                      } ${isSelectedDate ? 'bg-primary-50 ring-2 ring-primary-500 ring-inset' : 'hover:bg-neutral-50'}`}
                   >
                     <div className="p-2 h-full flex flex-col">
                       {/* Date number */}
                       <div className="flex items-center justify-between mb-1">
                         <span
-                          className={`w-7 h-7 flex items-center justify-center rounded-full text-sm font-medium ${
-                            isTodayDate ? 'bg-primary-600 text-white' : isSunday && inMonth ? 'text-red-500' : inMonth ? 'text-neutral-900' : 'text-neutral-400'
-                          }`}
+                          className={`w-7 h-7 flex items-center justify-center rounded-full text-sm font-medium ${isTodayDate ? 'bg-primary-600 text-white' : isSunday && inMonth ? 'text-red-500' : inMonth ? 'text-neutral-900' : 'text-neutral-400'
+                            }`}
                         >
                           {date.getDate()}
                         </span>

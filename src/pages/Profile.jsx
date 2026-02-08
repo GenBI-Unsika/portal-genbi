@@ -134,7 +134,7 @@ export default function Profile() {
   const getStudyProgram = () => profile.studyProgram?.name || '';
   const getNpm = () => profile.npm || '';
   const getSemester = () => profile.semester || '';
-  // Avatar: prioritas profile.avatar (dari DB), lalu me.picture (dari Google saat login)
+
   const getAvatar = () => profile.avatar || me?.picture || null;
   const getMotivasi = () => profile.motivasi || '';
   const getInitials = () => {
@@ -144,7 +144,7 @@ export default function Profile() {
     return parts.length >= 2 ? (parts[0][0] + parts[1][0]).toUpperCase() : parts[0]?.[0]?.toUpperCase() || 'U';
   };
 
-  // Bank / Rekening state
+
   const [bankForm, setBankForm] = useState({
     bankName: profile.bankName || 'BRI',
     bankAccountNumber: profile.bankAccountNumber || '',
@@ -183,7 +183,7 @@ export default function Profile() {
     }
   };
 
-  // Loading state
+
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh]">
@@ -193,7 +193,7 @@ export default function Profile() {
     );
   }
 
-  // Error state
+
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh]">
@@ -207,13 +207,13 @@ export default function Profile() {
     );
   }
 
-  // Tab Content Renderer
+
   const renderTabContent = () => {
-    // ========== DATA AKUN ==========
+
     if (tab === 'akun') {
       return (
         <form className="space-y-3 sm:space-y-4" onSubmit={saveAkun}>
-          {/* Avatar Section */}
+
           <div className="flex items-center gap-2 sm:gap-3 pb-3 sm:pb-4 border-b border-neutral-100">
             <div className="w-9 h-9 sm:w-14 sm:h-14 rounded-full overflow-hidden bg-primary-100 flex items-center justify-center flex-shrink-0">
               {getAvatar() ? <img src={getAvatar()} alt={getName()} className="w-full h-full object-cover" referrerPolicy="no-referrer" /> : <span className="text-body font-bold text-primary-600">{getInitials()}</span>}
@@ -247,7 +247,7 @@ export default function Profile() {
             <SelectField label="Semester" value={profile.semester || ''} options={[1, 2, 3, 4, 5, 6, 7, 8].map((s) => ({ value: s, label: `Semester ${s}` }))} onChange={(v) => setLocalMe({ ...me, profile: { ...profile, semester: v } })} />
           </div>
 
-          {/* Motivasi / Bio */}
+
           <div>
             <label className="block text-caption font-medium text-neutral-700 mb-1">Motivasi / Kata-kata</label>
             <textarea
@@ -274,7 +274,7 @@ export default function Profile() {
       );
     }
 
-    // ========== REKENING ==========
+
     if (tab === 'rekening') {
       return (
         <form className="space-y-3 sm:space-y-4" onSubmit={saveRekening}>
@@ -305,7 +305,7 @@ export default function Profile() {
       );
     }
 
-    // ========== AKADEMIK ==========
+
     if (tab === 'akademik') {
       return (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
@@ -319,13 +319,13 @@ export default function Profile() {
       );
     }
 
-    // ========== PERPOINTAN ==========
+
     if (tab === 'perpointan') {
       const activities = pointsData.history || [];
       const breakdown = pointsData.breakdown || [];
       const total = pointsData.total || 0;
 
-      // Rank thresholds - TODO: Fetch dari backend API (GET /api/settings/ranks)
+
       const rankThresholds = {
         platinum: 80,
         gold: 60,
@@ -333,7 +333,7 @@ export default function Profile() {
         bronze: 20,
       };
 
-      // Rank badge based on total points
+
       const getRankInfo = (pts) => {
         if (pts >= rankThresholds.platinum) return { label: 'Platinum', threshold: rankThresholds.platinum, color: 'bg-violet-100 text-violet-700 border-violet-200', icon: '🏆' };
         if (pts >= rankThresholds.gold) return { label: 'Gold', threshold: rankThresholds.gold, color: 'bg-amber-100 text-amber-700 border-amber-200', icon: '🥇' };
@@ -345,9 +345,9 @@ export default function Profile() {
 
       return (
         <div className="space-y-2.5 sm:space-y-3">
-          {/* Header with Total & Rank */}
+
           <div className="flex flex-col sm:flex-row gap-2">
-            {/* Total Points Card */}
+
             <div className="flex-1 bg-primary-50 border border-primary-200 rounded-lg p-2 sm:p-2.5 flex items-center gap-2 sm:gap-2.5">
               <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary-100 flex items-center justify-center">
                 <Trophy className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-primary-600" />
@@ -357,7 +357,7 @@ export default function Profile() {
                 <p className="text-lg sm:text-xl font-bold text-primary-700">{total}</p>
               </div>
             </div>
-            {/* Rank Badge */}
+
             <div className={`flex-shrink-0 sm:w-28 border rounded-lg p-2 sm:p-2.5 flex flex-col items-center justify-center ${rank.color}`}>
               {rank.icon && <span className="text-base sm:text-lg mb-0.5">{rank.icon}</span>}
               <p className="text-[10px] font-medium opacity-75">{rank.label}</p>
@@ -365,7 +365,7 @@ export default function Profile() {
             </div>
           </div>
 
-          {/* Breakdown Grid */}
+
           {breakdown.length > 0 && (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
               {breakdown.map((b, i) => (
@@ -377,7 +377,7 @@ export default function Profile() {
             </div>
           )}
 
-          {/* History Timeline */}
+
           <div className="bg-white rounded-lg border border-neutral-200">
             <div className="p-2 sm:p-2.5 border-b border-neutral-100 flex items-center justify-between">
               <p className="font-semibold text-[11px] sm:text-[12px] text-neutral-900">Riwayat Aktivitas</p>
@@ -393,12 +393,12 @@ export default function Profile() {
               <div className="max-h-64 overflow-y-auto">
                 {activities.map((act, i) => (
                   <div key={i} className="flex items-start gap-2 p-2 sm:p-2.5 border-b border-neutral-50 last:border-0 hover:bg-neutral-50">
-                    {/* Timeline dot */}
+
                     <div className="flex flex-col items-center pt-1">
                       <div className="w-1.5 h-1.5 rounded-full bg-primary-500" />
                       {i < activities.length - 1 && <div className="w-0.5 h-full bg-neutral-200 mt-1" />}
                     </div>
-                    {/* Content */}
+
                     <div className="flex-1 min-w-0">
                       <p className="font-medium text-[11px] text-neutral-900 truncate">{act.description || act.category}</p>
                       <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
@@ -408,7 +408,7 @@ export default function Profile() {
                         <span className="px-1 py-0.5 bg-neutral-100 rounded text-[10px] text-neutral-600">{act.category}</span>
                       </div>
                     </div>
-                    {/* Points */}
+
                     <div className="flex-shrink-0 px-1.5 py-0.5 bg-emerald-50 border border-emerald-200 rounded-md">
                       <span className="text-[11px] sm:text-[12px] font-bold text-emerald-600">+{act.points}</span>
                     </div>
@@ -421,11 +421,11 @@ export default function Profile() {
       );
     }
 
-    // ========== UANG KAS ==========
+
     if (tab === 'uangkas') {
       const entries = treasuryData.entries || [];
       const summary = treasuryData.summary || { paid: 0, unpaid: 0, monthsPaid: 0, monthsUnpaid: 0 };
-      const totalMonths = summary.totalMonths || 9; // TODO: Fetch dari backend settings
+      const totalMonths = summary.totalMonths || 9;
 
       const generatePDF = () => {
         try {
@@ -464,7 +464,7 @@ export default function Profile() {
 
       return (
         <div className="space-y-3 sm:space-y-4">
-          {/* Stats */}
+
           <div className="grid grid-cols-3 gap-2 sm:gap-3">
             <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-2 sm:p-3">
               <p className="text-[10px] sm:text-xs text-emerald-600 font-medium">Total Dibayar</p>
@@ -494,7 +494,7 @@ export default function Profile() {
             </div>
           )}
 
-          {/* History */}
+
           <div className="bg-white rounded-lg border border-neutral-200">
             <div className="p-2.5 sm:p-3 border-b border-neutral-100 flex items-center justify-between">
               <p className="font-semibold text-[13px] sm:text-sm text-neutral-900">Riwayat Pembayaran</p>
@@ -533,15 +533,15 @@ export default function Profile() {
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {/* Page Title */}
+
       <div>
         <h1 className="text-lg sm:text-xl font-bold text-neutral-900">Profil Saya</h1>
         <p className="text-xs sm:text-sm text-neutral-500 mt-0.5">Kelola informasi akun dan data pribadi</p>
       </div>
 
-      {/* Main Content */}
+
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4">
-        {/* Sidebar - horizontal scroll on mobile */}
+
         <div className="lg:col-span-1">
           <div className="bg-white rounded-lg border border-neutral-200 p-1 sm:p-2">
             <nav className="flex lg:flex-col gap-0.5 sm:gap-1 overflow-x-auto lg:overflow-visible pb-0.5 lg:pb-0 -mx-0.5 px-0.5 scrollbar-hide">
@@ -564,7 +564,7 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Content */}
+
         <div className="lg:col-span-3">
           <div className="bg-white rounded-lg border border-neutral-200">
             <div className="p-3 sm:p-4 border-b border-neutral-100">
@@ -584,7 +584,7 @@ export default function Profile() {
   );
 }
 
-// ========== HELPER COMPONENTS ==========
+
 
 function InputField({ label, value, onChange, disabled, placeholder, type = 'text' }) {
   return (
@@ -596,9 +596,8 @@ function InputField({ label, value, onChange, disabled, placeholder, type = 'tex
         onChange={(e) => onChange?.(e.target.value)}
         disabled={disabled}
         placeholder={placeholder}
-        className={`w-full h-8 sm:h-10 px-2 sm:px-3 rounded-lg border text-input placeholder:text-caption-sm transition-colors ${
-          disabled ? 'bg-neutral-100 border-neutral-200 text-neutral-500 cursor-not-allowed' : 'border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
-        }`}
+        className={`w-full h-8 sm:h-10 px-2 sm:px-3 rounded-lg border text-input placeholder:text-caption-sm transition-colors ${disabled ? 'bg-neutral-100 border-neutral-200 text-neutral-500 cursor-not-allowed' : 'border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
+          }`}
       />
     </div>
   );
@@ -612,9 +611,8 @@ function SelectField({ label, value, options, onChange, disabled }) {
         value={value}
         onChange={(e) => onChange?.(e.target.value)}
         disabled={disabled}
-        className={`w-full h-8 sm:h-10 px-2 sm:px-3 rounded-lg border text-input bg-white transition-colors ${
-          disabled ? 'bg-neutral-100 border-neutral-200 text-neutral-500 cursor-not-allowed' : 'border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
-        }`}
+        className={`w-full h-8 sm:h-10 px-2 sm:px-3 rounded-lg border text-input bg-white transition-colors ${disabled ? 'bg-neutral-100 border-neutral-200 text-neutral-500 cursor-not-allowed' : 'border-neutral-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500'
+          }`}
       >
         <option value="">Pilih {label}</option>
         {options.map((opt) => (

@@ -44,7 +44,7 @@ export default function Leaderboard() {
     loadData();
   }, [loadData]);
 
-  // Lock body scroll for mobile bottom-sheet detail view
+  // Kunci scroll body untuk tampilan detail bottom-sheet mobile
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
@@ -143,7 +143,7 @@ export default function Leaderboard() {
           </button>
         </div>
 
-        {/* Stats Overview */}
+        {/* Ringkasan Statistik */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3 md:gap-4 animate-fade-in-up">
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-neutral-200 p-3 sm:p-4 md:p-5 hover:border-neutral-300 transition-colors">
             <div className="flex items-center gap-3 sm:gap-4">
@@ -180,7 +180,7 @@ export default function Leaderboard() {
           </div>
         </div>
 
-        {/* Main Content - View */}
+        {/* Konten Utama - Tampilan */}
         <div className={`grid gap-3 sm:gap-4 transition-all ${selectedMember ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'}`}>
           {/* Leaderboard */}
           <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-neutral-200 p-3 sm:p-4 md:p-6">
@@ -218,7 +218,7 @@ export default function Leaderboard() {
             </ol>
           </div>
 
-          {/* Tracker Detail Panel - Desktop Only */}
+          {/* Panel Detail Tracker - Hanya Desktop */}
           {selectedMember && (
             <div className="hidden lg:block card p-5 space-y-4 animate-slide-fade">
               <div className="flex items-center justify-between">
@@ -231,7 +231,7 @@ export default function Leaderboard() {
                 </button>
               </div>
 
-              {/* Member Profile */}
+              {/* Profil Anggota */}
               <div className="flex items-center gap-4 p-4 bg-gradient-to-br from-primary-50 to-secondary-50 rounded-xl">
                 <Avatar name={selectedMember.name} size={52} />
                 <div className="flex-1 min-w-0">
@@ -244,7 +244,7 @@ export default function Leaderboard() {
                 </div>
               </div>
 
-              {/* Activity Stats */}
+              {/* Statistik Aktivitas */}
               <div className="grid grid-cols-2 gap-3">
                 <div className="p-3 bg-blue-50 rounded-xl text-center">
                   <div className="text-xl font-bold text-blue-600">{selectedMember.online}</div>
@@ -256,7 +256,7 @@ export default function Leaderboard() {
                 </div>
               </div>
 
-              {/* Activity History */}
+              {/* Riwayat Aktivitas */}
               <div>
                 <h3 className="text-sm font-semibold text-neutral-700 mb-3">Riwayat Kegiatan</h3>
                 <div className="space-y-2">
@@ -282,7 +282,7 @@ export default function Leaderboard() {
             </div>
           )}
 
-          {/* Mobile Bottom Sheet Modal for Selected Member */}
+          {/* Modal Bottom Sheet Mobile untuk Anggota Terpilih */}
           {selectedMember &&
             ReactDOM.createPortal(
               <div className="lg:hidden fixed inset-0 z-[9998] flex flex-col pt-20 pb-20" onClick={() => setSelectedMember(null)}>
@@ -304,9 +304,9 @@ export default function Leaderboard() {
                     </button>
                   </div>
 
-                  {/* Scrollable Content */}
+                  {/* Konten Scrollable */}
                   <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                    {/* Member Profile */}
+                    {/* Profil Anggota */}
                     <div className="flex items-center gap-3 p-3 bg-gradient-to-br from-primary-50 to-secondary-50 rounded-xl">
                       <Avatar name={selectedMember.name} size={48} />
                       <div className="flex-1 min-w-0">
@@ -321,7 +321,7 @@ export default function Leaderboard() {
                       </div>
                     </div>
 
-                    {/* Activity Stats */}
+                    {/* Statistik Aktivitas */}
                     <div className="grid grid-cols-2 gap-2">
                       <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl text-center">
                         <div className="text-2xl font-bold text-blue-600">{selectedMember.online}</div>
@@ -333,7 +333,7 @@ export default function Leaderboard() {
                       </div>
                     </div>
 
-                    {/* Activity History */}
+                    {/* Riwayat Aktivitas */}
                     <div>
                       <h3 className="text-xs font-semibold text-neutral-700 mb-2">Riwayat Kegiatan</h3>
                       <div className="space-y-2">

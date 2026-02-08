@@ -70,7 +70,7 @@ export default function Dispensasi() {
         const parsed = JSON.parse(saved);
         if (parsed && Object.values(parsed).some((v) => v)) setForm(parsed);
       }
-    } catch {}
+    } catch { }
     loadDispensations();
     if (isAdmin) loadTemplate();
   }, []);
@@ -276,11 +276,11 @@ export default function Dispensasi() {
 
   const isProfileComplete = userName && userNpm;
 
-  // ==================== AWARDEE VIEW ====================
+
   if (!isAdmin) {
     return (
       <div className="space-y-3 sm:space-y-4">
-        {/* Page Title */}
+
         <div className="flex items-start sm:items-center justify-between gap-3">
           <div className="min-w-0">
             <h1 className="text-title-lg font-bold text-neutral-900">Surat Dispensasi</h1>
@@ -291,7 +291,7 @@ export default function Dispensasi() {
           </div>
         </div>
 
-        {/* Profile Incomplete Warning */}
+
         {!isProfileComplete && (
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
             <div className="flex items-center gap-2 flex-1">
@@ -304,7 +304,7 @@ export default function Dispensasi() {
           </div>
         )}
 
-        {/* Form Card */}
+
         <div className="bg-white rounded-lg border border-neutral-200">
           <button onClick={() => setFormExpanded(!formExpanded)} className="w-full p-3 sm:p-4 flex items-center justify-between text-left hover:bg-neutral-50">
             <div className="flex items-center gap-2.5 sm:gap-3">
@@ -321,7 +321,7 @@ export default function Dispensasi() {
 
           {formExpanded && (
             <div className="p-3 sm:p-4 pt-0 border-t border-neutral-100 space-y-3 sm:space-y-4">
-              {/* Data Pemohon */}
+
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 p-2 sm:p-3 bg-neutral-50 rounded-lg">
                 <div>
                   <span className="text-caption-sm text-neutral-500">Nama</span>
@@ -341,7 +341,7 @@ export default function Dispensasi() {
                 </div>
               </div>
 
-              {/* Form Fields */}
+
               <div className="grid sm:grid-cols-2 gap-2 sm:gap-3">
                 <div>
                   <label className="block text-caption-sm font-medium text-neutral-700 mb-1">
@@ -370,7 +370,7 @@ export default function Dispensasi() {
                 </div>
               </div>
 
-              {/* Actions */}
+
               <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
                 {editingId && (
                   <button
@@ -397,7 +397,7 @@ export default function Dispensasi() {
           )}
         </div>
 
-        {/* History dengan Table View */}
+
         <div className="bg-white rounded-lg border border-neutral-200">
           <div className="p-3 sm:p-4 border-b border-neutral-100">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3">
@@ -411,7 +411,7 @@ export default function Dispensasi() {
                 </div>
               </div>
 
-              {/* Status Filter */}
+
               <div className="flex items-center gap-2">
                 <Filter className="w-4 h-4 text-neutral-400 hidden sm:block" />
                 <select
@@ -444,7 +444,7 @@ export default function Dispensasi() {
             </div>
           ) : (
             <>
-              {/* Desktop Table View */}
+
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full">
                   <thead>
@@ -545,7 +545,7 @@ export default function Dispensasi() {
                 </table>
               </div>
 
-              {/* Mobile Card View */}
+
               <div className="md:hidden divide-y divide-neutral-100">
                 {items
                   .filter((item) => statusTab === 'ALL' || item.status === statusTab)
@@ -633,7 +633,7 @@ export default function Dispensasi() {
             </>
           )}
 
-          {/* Table Footer with Total */}
+
           {!loading && items.filter((item) => statusTab === 'ALL' || item.status === statusTab).length > 0 && (
             <div className="px-4 py-3 bg-neutral-50 border-t border-neutral-200">
               <p className="text-xs text-neutral-600">
@@ -644,7 +644,7 @@ export default function Dispensasi() {
           )}
         </div>
 
-        {/* Preview Modal */}
+
         {previewItem && (
           <Modal onClose={() => setPreviewItem(null)} title={previewItem.showFilePreview ? 'Preview Surat Dispensasi' : 'Detail Pengajuan'}>
             <div className="space-y-4">
@@ -774,7 +774,7 @@ export default function Dispensasi() {
     );
   }
 
-  // ==================== ADMIN VIEW ====================
+
   const stats = {
     total: allItems.length,
     diajukan: allItems.filter((i) => i.status === 'DIAJUKAN').length,
