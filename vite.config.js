@@ -12,6 +12,11 @@ export default defineConfig({
     clearMocks: true,
   },
   server: {
+    // Needed for Google Identity Services (GSI) popup/iframe communication in dev.
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+      'Cross-Origin-Embedder-Policy': 'unsafe-none',
+    },
     port: 5175,
     strictPort: true,
     proxy: {
