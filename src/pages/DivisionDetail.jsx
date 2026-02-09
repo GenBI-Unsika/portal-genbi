@@ -202,31 +202,7 @@ export default function DivisionDetail() {
             </div>
           </div>
 
-          {/* Motivasi */}
-          {selected?.motivasi && (
-            <div className="bg-primary-50 rounded-xl p-4 sm:p-5 border border-primary-100">
-              <div className="flex items-start gap-3">
-                <Quote className="w-5 h-5 sm:w-6 sm:h-6 text-primary-400 flex-shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="text-sm font-semibold text-neutral-900 mb-2">Motivasi</h4>
-                  <p className="text-sm sm:text-base text-neutral-700 italic leading-relaxed">"{selected.motivasi}"</p>
-                </div>
-              </div>
-            </div>
-          )}
 
-          {/* Cerita */}
-          {selected?.cerita && (
-            <div>
-              <h4 className="text-sm font-semibold text-neutral-900 mb-2 flex items-center gap-2">
-                <BookOpen className="w-4 h-4" />
-                Cerita
-              </h4>
-              <div className="bg-neutral-50 rounded-xl p-4 max-h-[40vh] overflow-y-auto border border-neutral-200">
-                <p className="text-sm sm:text-base text-neutral-700 whitespace-pre-line leading-relaxed">{selected.cerita}</p>
-              </div>
-            </div>
-          )}
         </div>
       </Modal>
     </div>
