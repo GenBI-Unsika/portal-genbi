@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Trophy, Wallet, User, GraduationCap, CreditCard, Phone, Mail, Building2, BookOpen, Award, TrendingUp, Copy, Check, Download, Loader2, AlertCircle, Star, Clock, CheckCircle } from 'lucide-react';
+import { Calendar, Trophy, Wallet, User, GraduationCap, CreditCard, Phone, Building2, BookOpen, Award, TrendingUp, Copy, Check, Download, Loader2, AlertCircle } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import { getMe, setMe, syncMe } from '../utils/auth.js';
-import { updateMyProfile, fetchFaculties, fetchStudyPrograms, fetchMyPoints, fetchMyTreasury } from '../utils/api.js';
+import { updateMyProfile, fetchFaculties, fetchStudyPrograms, fetchMyPoints, fetchMyTreasury, fetchDivisions } from '../utils/api.js';
 import { useToast } from '../components/Toast.jsx';
 import { useConfirm } from '../contexts/ConfirmContext.jsx';
 
@@ -27,6 +27,7 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const [faculties, setFaculties] = useState([]);
   const [studyPrograms, setStudyPrograms] = useState([]);
+  const [divisions, setDivisions] = useState([]);
   const [pointsData, setPointsData] = useState({ total: 0, breakdown: [], history: [] });
   const [treasuryData, setTreasuryData] = useState({ entries: [], summary: { paid: 0, unpaid: 0 } });
   const [copiedField, setCopiedField] = useState(null);
@@ -38,9 +39,16 @@ export default function Profile() {
       try {
         const freshMe = await syncMe();
         setLocalMe(freshMe || {});
-        const facs = await fetchFaculties();
+
+        const [facs, divs, pts, treasury] = await Promise.all([
+          fetchFaculties(),
+          fetchDivisions(),
+          fetchMyPoints(),
+          fetchMyTreasury()
+        ]);
+
         setFaculties(facs);
-        const [pts, treasury] = await Promise.all([fetchMyPoints(), fetchMyTreasury()]);
+        setDivisions(divs);
         setPointsData(pts);
         setTreasuryData(treasury);
       } catch (err) {
@@ -89,12 +97,16 @@ export default function Profile() {
     try {
       const updatedProfile = await updateMyProfile({
         name: me.profile?.name || me.name,
-        phone: me.profile?.phone || me.phone,
+        phone: me.profile?.phone || null,
+        birthDate: me.profile?.birthDate ? new Date(me.profile.birthDate).toISOString() : null,
+        gender: me.profile?.gender || null,
         facultyId: me.profile?.facultyId,
         studyProgramId: me.profile?.studyProgramId,
         semester: me.profile?.semester,
         npm: me.profile?.npm,
-        motivasi: me.profile?.motivasi,
+        jabatan: me.profile?.jabatan || null,
+        divisionId: me.profile?.divisionId || null,
+        socials: me.profile?.socials || {},
       });
 
       const nextMe = { ...me, profile: updatedProfile };
@@ -112,31 +124,23 @@ export default function Profile() {
   const getName = () => profile.name || me?.name || '';
   const getEmail = () => me?.email || '';
   const getPhone = () => profile.phone || '';
-  const getDivision = () =>
-    profile?.division?.name ||
-    profile?.divisionName ||
-    profile?.division ||
-    profile?.divisi?.name ||
-    profile?.divisiName ||
-    profile?.divisi ||
-    profile?.teamMember?.division?.name ||
-    profile?.teamMember?.division ||
-    me?.division?.name ||
-    me?.divisionName ||
-    me?.division ||
-    me?.divisi?.name ||
-    me?.divisiName ||
-    me?.divisi ||
-    me?.teamMember?.division?.name ||
-    me?.teamMember?.division ||
-    '';
+  const getDivision = () => {
+    // Prioritize display name from helper or fetched name, else fallback to ID/Key
+    if (profile.divisionId) {
+      const div = divisions.find(d => d.id === profile.divisionId);
+      if (div) return div.name;
+    }
+    return profile?.division?.name || '';
+  };
   const getFaculty = () => profile.faculty?.name || '';
   const getStudyProgram = () => profile.studyProgram?.name || '';
   const getNpm = () => profile.npm || '';
   const getSemester = () => profile.semester || '';
+  const getBirthDate = () => profile.birthDate ? new Date(profile.birthDate).toISOString().split('T')[0] : '';
 
   const getAvatar = () => profile.avatar || me?.picture || null;
-  const getMotivasi = () => profile.motivasi || '';
+  const getSocials = () => profile.socials || {};
+
   const getInitials = () => {
     const name = getName();
     if (!name) return 'U';
@@ -212,8 +216,8 @@ export default function Profile() {
 
     if (tab === 'akun') {
       return (
-        <form className="space-y-3 sm:space-y-4" onSubmit={saveAkun}>
-
+        <form className="space-y-6" onSubmit={saveAkun}>
+          {/* Header Profil */}
           <div className="flex items-center gap-2 sm:gap-3 pb-3 sm:pb-4 border-b border-neutral-100">
             <div className="w-9 h-9 sm:w-14 sm:h-14 rounded-full overflow-hidden bg-primary-100 flex items-center justify-center flex-shrink-0">
               {getAvatar() ? <img src={getAvatar()} alt={getName()} className="w-full h-full object-cover" referrerPolicy="no-referrer" /> : <span className="text-body font-bold text-primary-600">{getInitials()}</span>}
@@ -221,44 +225,91 @@ export default function Profile() {
             <div className="flex-1 min-w-0">
               <p className="text-body font-semibold text-neutral-900 truncate">{getName() || 'Nama belum diisi'}</p>
               <p className="text-caption text-neutral-500 truncate">{getEmail()}</p>
-              {getMotivasi() && <p className="text-caption text-neutral-600 italic mt-0.5 truncate">"{getMotivasi()}"</p>}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-            <InputField label="Nama Lengkap" value={getName()} onChange={(v) => setLocalMe({ ...me, profile: { ...profile, name: v } })} />
-            <InputField label="Email" value={getEmail()} disabled />
-            <InputField label="Divisi" value={getDivision() || '-'} disabled placeholder="Belum ditentukan" />
-            <InputField label="No. HP" value={getPhone()} onChange={(v) => setLocalMe({ ...me, profile: { ...profile, phone: v } })} placeholder="08xxxxxxxxxx" />
-            <InputField label="NPM" value={getNpm()} onChange={(v) => setLocalMe({ ...me, profile: { ...profile, npm: v } })} />
-            <SelectField
-              label="Fakultas"
-              value={profile.facultyId || ''}
-              options={faculties.map((f) => ({ value: f.id, label: f.name }))}
-              onChange={(v) => setLocalMe({ ...me, profile: { ...profile, facultyId: v, studyProgramId: null } })}
-            />
-            <SelectField
-              label="Program Studi"
-              value={profile.studyProgramId || ''}
-              options={studyPrograms.map((sp) => ({ value: sp.id, label: sp.name }))}
-              onChange={(v) => setLocalMe({ ...me, profile: { ...profile, studyProgramId: v } })}
-              disabled={!profile.facultyId}
-            />
-            <SelectField label="Semester" value={profile.semester || ''} options={[1, 2, 3, 4, 5, 6, 7, 8].map((s) => ({ value: s, label: `Semester ${s}` }))} onChange={(v) => setLocalMe({ ...me, profile: { ...profile, semester: v } })} />
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-neutral-900 border-b border-neutral-100 pb-2">Informasi Pribadi</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <InputField label="Nama Lengkap" value={getName()} onChange={(v) => setLocalMe({ ...me, profile: { ...profile, name: v } })} />
+              <InputField label="Email" value={getEmail()} disabled />
+              <InputField label="No. HP / WhatsApp" value={getPhone()} onChange={(v) => setLocalMe({ ...me, profile: { ...profile, phone: v } })} placeholder="08xxxxxxxxxx" />
+              <SelectField
+                label="Jenis Kelamin"
+                value={profile.gender || ''}
+                options={[{ value: 'L', label: 'Laki-laki' }, { value: 'P', label: 'Perempuan' }]}
+                onChange={(v) => setLocalMe({ ...me, profile: { ...profile, gender: v } })}
+              />
+              <InputField
+                label="Tanggal Lahir"
+                type="date"
+                value={getBirthDate()}
+                onChange={(v) => setLocalMe({ ...me, profile: { ...profile, birthDate: v } })}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-neutral-900 border-b border-neutral-100 pb-2">Data Akademik</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <InputField label="NPM" value={getNpm()} onChange={(v) => setLocalMe({ ...me, profile: { ...profile, npm: v } })} />
+              <SelectField
+                label="Fakultas"
+                value={profile.facultyId || ''}
+                options={faculties.map((f) => ({ value: f.id, label: f.name }))}
+                onChange={(v) => setLocalMe({ ...me, profile: { ...profile, facultyId: v, studyProgramId: null } })}
+              />
+              <SelectField
+                label="Program Studi"
+                value={profile.studyProgramId || ''}
+                options={studyPrograms.map((sp) => ({ value: sp.id, label: sp.name }))}
+                onChange={(v) => setLocalMe({ ...me, profile: { ...profile, studyProgramId: v } })}
+                disabled={!profile.facultyId}
+              />
+              <SelectField label="Semester" value={profile.semester || ''} options={[1, 2, 3, 4, 5, 6, 7, 8].map((s) => ({ value: s, label: `Semester ${s}` }))} onChange={(v) => setLocalMe({ ...me, profile: { ...profile, semester: v } })} />
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-neutral-900 border-b border-neutral-100 pb-2">Keorganisasian</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <SelectField
+                label="Jabatan"
+                value={profile.jabatan || ''}
+                options={[
+                  'Ketua Umum',
+                  'Sekretaris Umum 1',
+                  'Sekretaris Umum 2',
+                  'Bendahara Umum 1',
+                  'Bendahara Umum 2',
+                  'Koordinator',
+                  'Sekretaris',
+                  'Bendahara',
+                  'Staff'
+                ].map(j => ({ value: j, label: j }))}
+                onChange={(v) => setLocalMe({ ...me, profile: { ...profile, jabatan: v } })}
+              />
+              <SelectField
+                label="Divisi"
+                value={profile.divisionId || ''}
+                options={divisions.map((d) => ({ value: d.id, label: d.name }))}
+                onChange={(v) => setLocalMe({ ...me, profile: { ...profile, divisionId: parseInt(v) } })}
+              />
+            </div>
           </div>
 
 
-          <div>
-            <label className="block text-caption font-medium text-neutral-700 mb-1">Motivasi / Kata-kata</label>
-            <textarea
-              value={getMotivasi()}
-              onChange={(e) => setLocalMe({ ...me, profile: { ...profile, motivasi: e.target.value } })}
-              placeholder="Tulis motivasi atau kata-kata singkat kamu..."
-              rows={2}
-              maxLength={200}
-              className="w-full px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border border-neutral-300 text-input placeholder:text-caption focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 resize-none"
-            />
-            <p className="text-caption-sm text-neutral-400 mt-0.5 text-right">{getMotivasi().length}/200</p>
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold text-neutral-900 border-b border-neutral-100 pb-2">Media Sosial</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <InputField
+                label="Instagram"
+                value={getSocials().instagram || ''}
+                onChange={(v) => setLocalMe({ ...me, profile: { ...profile, socials: { ...getSocials(), instagram: v } } })}
+                placeholder="@username"
+              />
+            </div>
           </div>
 
           <div className="flex justify-end gap-2 pt-3 sm:pt-4 border-t border-neutral-100">
