@@ -257,13 +257,13 @@ export default function Profile() {
                 label="Fakultas"
                 value={profile.facultyId || ''}
                 options={faculties.map((f) => ({ value: f.id, label: f.name }))}
-                onChange={(v) => setLocalMe({ ...me, profile: { ...profile, facultyId: v, studyProgramId: null } })}
+                onChange={(v) => setLocalMe({ ...me, profile: { ...profile, facultyId: v ? parseInt(v) : null, studyProgramId: null } })}
               />
               <SelectField
                 label="Program Studi"
                 value={profile.studyProgramId || ''}
                 options={studyPrograms.map((sp) => ({ value: sp.id, label: sp.name }))}
-                onChange={(v) => setLocalMe({ ...me, profile: { ...profile, studyProgramId: v } })}
+                onChange={(v) => setLocalMe({ ...me, profile: { ...profile, studyProgramId: v ? parseInt(v) : null } })}
                 disabled={!profile.facultyId}
               />
               <SelectField label="Semester" value={profile.semester || ''} options={[1, 2, 3, 4, 5, 6, 7, 8].map((s) => ({ value: s, label: `Semester ${s}` }))} onChange={(v) => setLocalMe({ ...me, profile: { ...profile, semester: v } })} />

@@ -51,7 +51,6 @@ async function tryRefreshToken() {
       });
 
       if (!res.ok) {
-
         setAccessToken(null);
         localStorage.removeItem('me');
         return null;
@@ -80,6 +79,73 @@ async function tryRefreshToken() {
   })();
 
   return refreshPromise;
+}
+
+// ============================================================================
+// FILE URL UTILITIES
+// ============================================================================
+
+/**
+ * Dapatkan URL API untuk path tertentu
+ */
+export function apiUrl(path) {
+  return `${API_BASE}${path.startsWith('/') ? '' : '/'}${path}`;
+}
+
+/**
+ * Get the public proxy URL for a permanent file
+ * This URL does not expire and works for public viewing
+ * @param {number|string} fileId - The FileObject ID
+ * @returns {string} The public proxy URL
+ */
+export function getPublicFileUrl(fileId) {
+  if (!fileId) return '';
+  return apiUrl(`/files/${fileId}/public`);
+}
+
+/**
+ * Check if a URL is a public file proxy URL
+ * @param {string} url - The URL to check
+ * @returns {boolean}
+ */
+export function isPublicFileUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  return /\/api\/v1\/files\/\d+\/public/.test(url);
+}
+
+/**
+ * Convert various file URL formats to the best displayable URL
+ * Handles relative URLs from server and converts them to absolute URLs
+ * Prioritizes public proxy URLs over direct Drive URLs
+ * @param {string} url - The original URL
+ * @returns {string} The best URL for display
+ */
+export function normalizeFileUrl(url) {
+  if (!url) return '';
+
+  // If already an absolute URL (http/https), return as-is
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url;
+  }
+
+  // If it's a relative public proxy URL from the server, convert to absolute
+  // Pattern: /api/v1/files/{id}/public
+  if (url.startsWith('/api/v1/files/') && url.includes('/public')) {
+    return apiUrl(url.replace('/api/v1', ''));
+  }
+
+  // If it's another API path (like /api/v1/files/temp/xxx), convert to absolute
+  if (url.startsWith('/api/v1/')) {
+    return apiUrl(url.replace('/api/v1', ''));
+  }
+
+  // If it's a temp preview URL without prefix, build full URL
+  if (url.includes('/files/temp/')) {
+    return apiUrl(url.startsWith('/') ? url : `/${url}`);
+  }
+
+  // Return other URLs as-is (legacy support, external URLs, etc.)
+  return url;
 }
 
 /**
@@ -112,11 +178,9 @@ export async function apiFetch(path, options = {}) {
 
   const json = await readJsonSafe(res);
 
-
   if (res.status === 401 && !skipAuth && !options._retry) {
     const newToken = await tryRefreshToken();
     if (newToken) {
-
       return apiFetch(path, { ...options, _retry: true });
     }
 
@@ -290,7 +354,6 @@ export function getExportCalendarUrl(eventId) {
 // ───────────────────────────────────────────────
 
 export async function fetchLeaderboard() {
-
   try {
     const json = await apiFetch('/leaderboard', { method: 'GET' });
     return json?.data || [];
@@ -339,7 +402,6 @@ export async function fetchTreasuryRecap() {
 }
 
 export async function createTreasuryRecord(data) {
-
   const json = await apiFetch('/treasury', {
     method: 'POST',
     body: data,
@@ -348,7 +410,6 @@ export async function createTreasuryRecord(data) {
 }
 
 export async function updateTreasuryRecord(memberId, period, data) {
-
   const json = await apiFetch('/treasury', {
     method: 'POST',
     body: { memberId, period, ...data },
@@ -357,7 +418,6 @@ export async function updateTreasuryRecord(memberId, period, data) {
 }
 
 export async function updateTreasuryMember(memberId, monthsData) {
-
   const json = await apiFetch(`/treasury/member/${memberId}`, {
     method: 'PUT',
     body: monthsData,

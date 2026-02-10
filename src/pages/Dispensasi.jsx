@@ -14,9 +14,9 @@ import {
   generateDispensationLetter,
 } from '../utils/api';
 import { FileText, Clock, CheckCircle, XCircle, Loader2, Send, Search, Eye, Download, Upload, File, Trash2, ChevronDown, Pencil, Undo2, Calendar, User, AlertCircle, X, Filter, FileCheck } from 'lucide-react';
-import { getMe } from '../utils/auth.js';
 import Modal from '../components/Modal.jsx';
 import { useConfirm } from '../contexts/ConfirmContext.jsx';
+import { isProfileComplete as checkIsProfileComplete } from '../utils/profile.js';
 
 const FORM_DRAFT_KEY = 'portal_dispensasi_form_draft';
 
@@ -58,10 +58,11 @@ export default function Dispensasi() {
   const [reviewSaving, setReviewSaving] = useState(false);
   const [statusTab, setStatusTab] = useState('ALL');
 
-  const userName = me?.profile?.name || me?.name || '';
-  const userNpm = me?.profile?.npm || me?.npm || '';
+  const userName = me?.profile?.name || '';
+  const userNpm = me?.profile?.npm || '';
   const userFakultas = me?.profile?.faculty?.name || '';
   const userProdi = me?.profile?.studyProgram?.name || '';
+  const isProfileComplete = checkIsProfileComplete(me);
 
   useEffect(() => {
     try {
@@ -274,7 +275,6 @@ export default function Dispensasi() {
 
   const formatDate = (iso) => new Date(iso).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
 
-  const isProfileComplete = userName && userNpm;
 
 
   if (!isAdmin) {
