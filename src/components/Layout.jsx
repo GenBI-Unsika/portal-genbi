@@ -2,10 +2,12 @@ import { useMemo, useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Home, CalendarDays, Trophy, UserRound, Menu, LogOut, Wallet, FileText, Users } from 'lucide-react';
 import Avatar from './Avatar.jsx';
+import ProfileCompletionModal from './ProfileCompletionModal.jsx';
 import { logout, getMe, syncMe } from '../utils/auth.js';
 import { useConfirm } from '../contexts/ConfirmContext.jsx';
 import { useToast } from './Toast.jsx';
 
+import { getMissingProfileFields } from '../utils/profile.js';
 
 const ROLE_LABELS = {
   admin: 'Administrator',
@@ -18,9 +20,6 @@ const ROLE_LABELS = {
   member: 'Anggota',
 };
 
-
-
-
 const sidebarNav = [
   { to: '/', label: 'Beranda', icon: Home },
   { to: '/kalender', label: 'Kalender GenBI', icon: CalendarDays },
@@ -30,7 +29,6 @@ const sidebarNav = [
   { to: '/dispensasi', label: 'Surat Dispensasi', icon: FileText },
   { to: '/profile', label: 'Profile', icon: UserRound },
 ];
-
 
 const mobileNav = [
   { to: '/', label: 'Beranda', icon: Home },
@@ -54,10 +52,12 @@ export default function Layout() {
 
   const [collapsed, setCollapsed] = useState(isWideViewRoute);
   const [user, setUser] = useState(() => getMe());
+  const [showProfileRemind, setShowProfileRemind] = useState(false);
+  const [missingFields, setMissingFields] = useState([]);
+
   const navigate = useNavigate();
   const { confirm } = useConfirm();
   const toast = useToast();
-
 
   useEffect(() => {
     if (isWideViewRoute) {
@@ -65,28 +65,39 @@ export default function Layout() {
     }
   }, [isWideViewRoute, location.pathname]);
 
-
   useEffect(() => {
     const loadUser = async () => {
       try {
         const freshUser = await syncMe();
         if (freshUser) {
           setUser(freshUser);
+
+          // Check for profile completion
+          const missing = getMissingProfileFields(freshUser);
+          if (missing.length > 0) {
+            const hasSeenSession = sessionStorage.getItem('profile_remind_seen');
+            if (!hasSeenSession) {
+              setMissingFields(missing);
+              setShowProfileRemind(true);
+            }
+          }
         }
       } catch (err) {
-
         if (err?.status === 401) {
           toast.push('Sesi login telah berakhir. Silakan login kembali.', 'error');
           navigate('/login', { replace: true });
           return;
         }
-
         console.warn('Failed to sync user data:', err);
       }
     };
     loadUser();
   }, [navigate]);
 
+  const handleCloseRemind = () => {
+    setShowProfileRemind(false);
+    sessionStorage.setItem('profile_remind_seen', 'true');
+  };
 
   const userName = user?.profile?.name || user?.name || user?.email?.split('@')[0] || 'Pengguna';
   const userRole = user?.role || 'awardee';
@@ -217,6 +228,12 @@ export default function Layout() {
           </nav>
         </div>
       </div>
+
+      <ProfileCompletionModal
+        isOpen={showProfileRemind}
+        onClose={handleCloseRemind}
+        missingFields={missingFields}
+      />
     </div>
   );
 }
