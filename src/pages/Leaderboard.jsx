@@ -31,7 +31,7 @@ export default function Leaderboard() {
         toast.push('Format data leaderboard tidak valid', 'warning');
       }
     } catch (err) {
-      console.error('Failed to fetch leaderboard:', err);
+      // Error fetching leaderboard
       setError('Gagal memuat data leaderboard dari server');
       toast.push('Gagal memuat data leaderboard', 'error');
       setMembers([]);

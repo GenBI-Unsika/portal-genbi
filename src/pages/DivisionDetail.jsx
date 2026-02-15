@@ -69,7 +69,7 @@ export default function DivisionDetail() {
           });
         }
       } catch (err) {
-        console.error('Failed to load data:', err);
+        // Error loading data
         setMembers([]);
         setMeta({
           name: divisionKey

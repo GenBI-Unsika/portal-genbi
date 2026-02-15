@@ -27,7 +27,7 @@ export default function Home() {
         setMembers(membersData || []);
         setEvents(eventsData || []);
       } catch (err) {
-        console.error('Failed to load home data:', err);
+        // Error loading home data
         setMembers([]);
         setEvents([]);
       } finally {

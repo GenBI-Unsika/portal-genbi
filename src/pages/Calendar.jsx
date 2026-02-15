@@ -88,7 +88,7 @@ export default function ModernCalendar() {
         const apiEvents = await fetchEvents();
         setEvents(apiEvents || []);
       } catch (err) {
-        console.error('Failed to fetch events:', err);
+        // Error fetching events
         setEvents([]);
       } finally {
         setLoading(false);
@@ -105,7 +105,7 @@ export default function ModernCalendar() {
         const membersData = await fetchTeamMembers();
         if (!cancelled) setMembers(membersData || []);
       } catch (err) {
-        console.error('Failed to fetch members for birthdays:', err);
+        // Error fetching members for birthdays
         if (!cancelled) setMembers([]);
       }
     })();
@@ -354,7 +354,7 @@ export default function ModernCalendar() {
       }
       closeFormModal();
     } catch (err) {
-      console.error('Failed to save event:', err);
+      // Error saving event
       toast.push({ type: 'error', message: err?.message || 'Gagal menyimpan event' });
     }
   };
@@ -376,7 +376,7 @@ export default function ModernCalendar() {
       setSelectedEvent((prev) => (prev && prev.id === ev.id ? null : prev));
       toast.push({ type: 'success', message: 'Event berhasil dihapus' });
     } catch (err) {
-      console.error('Failed to delete event:', err);
+      // Error deleting event
       toast.push({ type: 'error', message: err?.message || 'Gagal menghapus event' });
     }
   };

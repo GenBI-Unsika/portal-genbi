@@ -73,7 +73,7 @@ export default function Kalender() {
         const data = await fetchEvents();
         setEvents(data || []);
       } catch (err) {
-        console.error('Failed to load events:', err);
+        // Error loading events
         setEvents([]);
       } finally {
         setLoading(false);

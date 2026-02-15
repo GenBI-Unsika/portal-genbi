@@ -47,7 +47,7 @@ export default function RekapitulasiKas() {
         toast.push('Format data tidak valid', 'warning');
       }
     } catch (err) {
-      console.error('Failed to fetch treasury data:', err);
+      // Error fetching treasury data
       setError('Gagal memuat data rekapitulasi kas dari server');
       setData([]);
       toast.push('Gagal memuat data rekapitulasi kas', 'error');

@@ -88,7 +88,7 @@ export default function Layout() {
           navigate('/login', { replace: true });
           return;
         }
-        console.warn('Failed to sync user data:', err);
+        // Failed to sync user data
       }
     };
     loadUser();
