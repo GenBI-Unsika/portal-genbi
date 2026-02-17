@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
+import { getMe } from '../utils/auth.js';
 import { useToast } from '../components/Toast.jsx';
 import {
   fetchMyDispensations,

@@ -6,6 +6,7 @@ import Modal from '../components/Modal';
 import SocialLinks from '../components/SocialLinks';
 import EmptyState from '../components/EmptyState';
 import { fetchMembers, groupByDivision, fetchDivisionByKey } from '../lib/members';
+import { normalizeFileUrl } from '../utils/api';
 
 // Default metadata when division is not found in API
 const defaultMeta = {
@@ -147,8 +148,12 @@ export default function DivisionDetail() {
             {/* Photo */}
             <div className="flex-shrink-0 mx-auto sm:mx-0">
               <div className="relative w-28 h-28 sm:w-36 sm:h-36 rounded-xl sm:rounded-2xl overflow-hidden bg-neutral-50 border border-neutral-200">
-                {selected?.photo ? (
-                  <img src={selected.photo} alt={`Foto ${selected.name}`} className="w-full h-full object-cover" />
+                {selected?.photo || selected?.photoUrl || selected?.avatar ? (
+                  <img
+                    src={normalizeFileUrl(selected.photo || selected.photoUrl || selected.avatar)}
+                    alt={`Foto ${selected.name}`}
+                    className="w-full h-full object-cover"
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary-500 flex items-center justify-center text-xl sm:text-2xl font-bold text-white">{getInitials(selected?.name)}</div>

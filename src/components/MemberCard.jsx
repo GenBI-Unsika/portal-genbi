@@ -1,5 +1,6 @@
 import React from 'react';
 import SocialLinks from './SocialLinks';
+import { normalizeFileUrl } from '../utils/api';
 
 function getInitials(name) {
   if (!name) return 'A';
@@ -12,7 +13,8 @@ function getInitials(name) {
 }
 
 export default function MemberCard({ member = {}, onClick, onKeyDown, showStudyInfo = true }) {
-  const { photo, name, jabatan, badgeText, major, faculty, socials } = member;
+  const { photo, photoUrl, name, jabatan, badgeText, major, faculty, socials } = member;
+  const displayPhoto = normalizeFileUrl(photo || photoUrl);
   return (
     <div
       role="button"
@@ -33,9 +35,9 @@ export default function MemberCard({ member = {}, onClick, onKeyDown, showStudyI
     >
       {/* Media */}
       <div className="relative w-full h-36 sm:h-48 bg-gray-100 overflow-hidden">
-        {photo ? (
+        {displayPhoto ? (
           <img
-            src={photo}
+            src={displayPhoto}
             alt={`Foto ${name}`}
             className="absolute inset-0 w-full h-full object-cover transform-gpu transition-transform duration-300 ease-out group-hover:scale-[1.03]"
             loading="lazy"
