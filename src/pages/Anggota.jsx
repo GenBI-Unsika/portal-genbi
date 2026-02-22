@@ -15,7 +15,6 @@ const defaultMeta = {
   bgLight: 'bg-neutral-50',
   textColor: 'text-neutral-600',
   borderColor: 'border-neutral-200',
-  icon: '👥',
 };
 
 function getDivisionKey(division) {
@@ -58,7 +57,6 @@ export default function Anggota() {
         bgLight: d.bgLight || defaultMeta.bgLight,
         textColor: d.textColor || defaultMeta.textColor,
         borderColor: d.borderColor || defaultMeta.borderColor,
-        icon: d.icon || defaultMeta.icon,
       };
     });
     return meta;
@@ -204,8 +202,7 @@ export default function Anggota() {
               >
                 {/* Content */}
                 <div className="p-4 sm:p-5">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl ${d.bgLight} flex items-center justify-center text-xl sm:text-2xl`}>{d.icon}</div>
+                  <div className="flex items-start justify-end mb-3">
                     <span className={`px-2 py-1 ${d.bgLight} ${d.textColor} rounded-full text-xs sm:text-sm font-semibold`}>{d.count} anggota</span>
                   </div>
 
