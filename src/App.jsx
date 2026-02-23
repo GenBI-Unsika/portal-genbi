@@ -16,6 +16,7 @@ const Anggota = React.lazy(() => import('./pages/Anggota.jsx'));
 const DivisionDetail = React.lazy(() => import('./pages/DivisionDetail.jsx'));
 const RekapitulasiKas = React.lazy(() => import('./pages/RekapitulasiKas.jsx'));
 const Dispensasi = React.lazy(() => import('./pages/Dispensasi.jsx'));
+const PusatInformasi = React.lazy(() => import('./pages/PusatInformasi.jsx'));
 
 function RequireAuth({ children }) {
   const loc = useLocation();
@@ -50,7 +51,11 @@ export default function App() {
   return (
     <ModalProvider>
       <ToastProvider>
-        <React.Suspense fallback={<div className="p-6 text-sm text-neutral-500">Memuat...</div>}>
+        <React.Suspense fallback={
+          <div className="flex items-center justify-center p-12">
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-neutral-200 border-t-primary-500" />
+          </div>
+        }>
           <Routes>
             <Route path="/login" element={<Login />} />
             {/* Standard Layout with sidebar */}
@@ -69,6 +74,7 @@ export default function App() {
               <Route path="/rekapitulasi-kas" element={<RekapitulasiKas />} />
               <Route path="/peringkat" element={<Leaderboard />} />
               <Route path="/dispensasi" element={<Dispensasi />} />
+              <Route path="/pusat-informasi" element={<PusatInformasi />} />
             </Route>
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

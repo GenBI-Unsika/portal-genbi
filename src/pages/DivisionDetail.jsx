@@ -14,7 +14,6 @@ const defaultMeta = {
   bgLight: 'bg-neutral-100',
   textColor: 'text-neutral-600',
   borderColor: 'border-neutral-200',
-  icon: '👥',
 };
 
 function getInitials(name) {
@@ -52,7 +51,6 @@ export default function DivisionDetail() {
           setMeta({
             name: divisionData.name,
             description: divisionData.description || '',
-            icon: divisionData.icon || defaultMeta.icon,
             bgLight: divisionData.bgLight || defaultMeta.bgLight,
             textColor: divisionData.textColor || defaultMeta.textColor,
             borderColor: divisionData.borderColor || defaultMeta.borderColor,
@@ -114,7 +112,6 @@ export default function DivisionDetail() {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-xl ${meta?.bgLight || 'bg-neutral-100'} flex items-center justify-center text-2xl sm:text-3xl flex-shrink-0`}>{meta?.icon || '👥'}</div>
           <div className="flex-1 min-w-0">
             <h1 className="text-title-lg font-bold text-neutral-900">{meta?.name || 'Divisi'}</h1>
             {meta?.description && <p className="text-subtitle text-neutral-600 mt-0.5">{meta.description}</p>}
