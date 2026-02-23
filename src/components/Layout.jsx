@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Home, CalendarDays, Trophy, UserRound, Menu, LogOut, Wallet, FileText, Users } from 'lucide-react';
+import { Home, CalendarDays, Trophy, UserRound, Menu, LogOut, Wallet, FileText, Users, HelpCircle } from 'lucide-react';
 import Avatar from './Avatar.jsx';
 import ProfileCompletionModal from './ProfileCompletionModal.jsx';
 import { logout, getMe, syncMe } from '../utils/auth.js';
@@ -27,6 +27,7 @@ const sidebarNav = [
   { to: '/rekapitulasi-kas', label: 'Rekapitulasi Kas', icon: Wallet },
   { to: '/peringkat', label: 'Peringkat', icon: Trophy },
   { to: '/dispensasi', label: 'Surat Dispensasi', icon: FileText },
+  { to: '/pusat-informasi', label: 'Pusat Informasi', icon: HelpCircle },
   { to: '/profile', label: 'Profile', icon: UserRound },
 ];
 
@@ -34,9 +35,8 @@ const mobileNav = [
   { to: '/', label: 'Beranda', icon: Home },
   { to: '/kalender', label: 'Kalender', icon: CalendarDays },
   { to: '/peringkat', label: 'Poin', icon: Trophy },
-  { to: '/dispensasi', label: 'Surat', icon: FileText },
-  { to: '/anggota', label: 'Anggota', icon: Users },
-  { to: '/rekapitulasi-kas', label: 'Kas', icon: Wallet },
+  { to: '/pusat-informasi', label: 'Bantuan', icon: HelpCircle },
+  { to: '/profile', label: 'Profil', icon: UserRound },
 ];
 
 const WIDE_VIEW_ROUTES = [
