@@ -1,12 +1,12 @@
+import { apiFetch } from '../utils/api';
+
 /**
  * Fetch all divisions from the API
  * @returns {Promise<Array>} Array of division objects
  */
 export async function fetchDivisions() {
-  const res = await fetch('/api/v1/divisions');
-  if (!res.ok) throw new Error('Failed to fetch divisions');
-  const json = await res.json();
-  return json.data || [];
+  const json = await apiFetch('/divisions', { method: 'GET' });
+  return json?.data || [];
 }
 
 /**
@@ -15,10 +15,12 @@ export async function fetchDivisions() {
  * @returns {Promise<Object|null>} Division object or null
  */
 export async function fetchDivisionByKey(key) {
-  const res = await fetch(`/api/v1/divisions/${key}`);
-  if (!res.ok) return null;
-  const json = await res.json();
-  return json.data || null;
+  try {
+    const json = await apiFetch(`/divisions/${key}`, { method: 'GET' });
+    return json?.data || null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -26,10 +28,8 @@ export async function fetchDivisionByKey(key) {
  * @returns {Promise<Array>} Array of member objects
  */
 export async function fetchMembers() {
-  const res = await fetch('/api/v1/teams');
-  if (!res.ok) throw new Error('Failed to fetch team members');
-  const json = await res.json();
-  return json.data || [];
+  const json = await apiFetch('/teams', { method: 'GET' });
+  return json?.data || [];
 }
 
 /**
